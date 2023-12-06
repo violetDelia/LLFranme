@@ -1,8 +1,5 @@
 /.vscode
 /build
-/CMakeLists.txt
-/compiler_test
 /config.h.in
 /main.cpp
 /src
-/test
