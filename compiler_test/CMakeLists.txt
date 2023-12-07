@@ -36,5 +36,6 @@ if(COMPILER_TEST_OPTION)
 
     # #---------- install ----------##
     install(TARGETS compiler_test
+        EXPORT compiler_testTargets
         DESTINATION ${CMAKE_INSTALL_BINDIR})
 endif()
