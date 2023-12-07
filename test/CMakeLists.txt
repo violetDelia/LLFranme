@@ -19,16 +19,17 @@ find_package(GTest 1.14.0 REQUIRED)
 set(TEST_ALL_FILES "${CMAKE_CURRENT_SOURCE_DIR}/test_all.cpp")
 
 if(TEST_STD)
-    set(TEST_ALL_FILES  ${TEST_ALL_FILES}  "${CMAKE_CURRENT_SOURCE_DIR}/test_std.cpp")
+    set(TEST_ALL_FILES ${TEST_ALL_FILES} "${CMAKE_CURRENT_SOURCE_DIR}/test_std.cpp")
 endif(TEST_STD)
+
 # #---------- add subdirectory ----------##
 
 # #---------- TEST_ALL ----------##
-add_executable(TEST_LLFRAME_ALL "${TEST_ALL_FILES}")
-target_include_directories(TEST_LLFRAME_ALL
+add_executable(${TEST_NAME} "${TEST_ALL_FILES}")
+target_include_directories(${TEST_NAME}
     PUBLIC
-    $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
-    $<INSTALL_INTERFACE:include>
+    $<BUILD_INTERFACE:${LLFRAME_BINARY_DIR} ${PROJECT_BINARY_DIR}>
+    $<INSTALL_INTERFACE:${NONE}>
 )
 
-target_link_libraries(TEST_LLFRAME_ALL PRIVATE ${GTEST_LIBRARIES})
+target_link_libraries(${TEST_NAME} PRIVATE ${GTEST_LIBRARIES})

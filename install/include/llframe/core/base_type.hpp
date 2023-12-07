@@ -13,10 +13,33 @@
 //    limitations under the License.
 
 /**
- * @file config.h
- * @brief 编译宏文件
- * @details 根据CMakeLists.txt编译选项生成
+ * @file base_type.hpp
+ * @brief 基础类型定义
+ * @details
  * @author 时光丶人爱
  * @date 2023-12-7
  * @copyright Apache 2.0
  */
+
+#ifndef __LLFRAME_BASE_TYPE_HPP__
+#define __LLFRAME_BASE_TYPE_HPP__
+#include <cstdint>
+#include <cstddef>
+namespace llframe
+{
+    //--------- define bese type ----------//
+    using int8_t = std::int8_t;
+    using int16_t = std::int16_t;
+    using int32_t = std::int32_t;
+    using int64_t = std::int64_t;
+    using uint8_t = std::uint8_t;
+    using uint16_t = std::uint16_t;
+    using uint32_t = std::uint32_t;
+    using uint64_t = std::uint64_t;
+    using float32_t = float;
+    using float64_t = double;
+    using size_t = std::size_t;
+    using ptrdiff_t = std::ptrdiff_t;
+}
+
+#endif //__LLFRAME_BASE_TYPE_HPP__

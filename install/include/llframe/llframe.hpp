@@ -13,17 +13,18 @@
 //    limitations under the License.
 
 /**
- * @file test_config.h
- * @brief 测试宏
- * @details 根据CMakeLists.txt选项生成
+ * @file llframe.hpp
+ * @brief
+ * @details
  * @author 时光丶人爱
  * @date 2023-12-7
  * @copyright Apache 2.0
  */
+#ifndef __LLFRAME_HPP__
+#define __LLFRAME_HPP__
+# include "core.hpp"
+namespace llframe
+{
 
-#ifndef __LLFRAME_TEST_CONFIG_HPP__
-#define __LLFRAME_TEST_CONFIG_HPP__
-
-#cmakedefine TEST_STD
-#cmakedefine TEST_LLFRAME
-#endif //__LLFRAME_TEST_CONFIG_HPP__
+}
+#endif //__LLFRAME_HPP__
