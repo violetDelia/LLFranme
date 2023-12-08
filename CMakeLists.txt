@@ -1,8 +1,4 @@
 # #---------- option cache ----------# #
-if(DEFINED INSTALL_TEST)
-    unset(INSTALL_TEST CACHE)
-endif()
-
 if(DEFINED OUT_COMPILER_INFO)
     unset(OUT_COMPILER_INFO CACHE)
 endif()
@@ -11,16 +7,24 @@ if(DEFINED TEST_PROJECT)
     unset(TEST_PROJECT CACHE)
 endif()
 
+if(DEFINED COMPILER_TEST_OPTION)
+    unset(COMPILER_TEST_OPTION CACHE)
+endif()
+
 if(DEFINED BUILD_SHARED_LIBS)
     unset(BUILD_SHARED_LIBS CACHE)
 endif()
 
+if(DEFINED TUTORIALS_MAKE)
+    unset(TUTORIALS_MAKE CACHE)
+endif()
+
 # #---------- build options ----------# #
-option(OUT_COMPILER_INFO "test project" OFF)
+option(OUT_COMPILER_INFO "out compiler information" OFF)
 option(TEST_PROJECT "test project" ON)
-option(COMPILER_TEST_OPTION "Test if the compilation is working" ON)
+option(COMPILER_TEST_OPTION "Test if the compilation is working" OFF)
 option(BUILD_SHARED_LIBS "Build using shared libraries" OFF)
-option(INSTALL_TEST "test insatll" ON)
+option(TUTORIALS_MAKE "TUTORIALS_MAKE" ON)
 
 # #---------- cmake settings ----------# #
 CMAKE_MINIMUM_REQUIRED(VERSION 3.25)
@@ -40,13 +44,12 @@ set(INSTALL_RELATIVE_DIR "install")
 set(INSTALL_INCLUDE_RELATIVE_DIR "include")
 set(INSTALL_LIB_RELATIVE_DIR "lib")
 set(INSTALL_RUNTIME_RELATIVE_DIR "bin")
-set(INSTALL_TEST_RELATIVE_DIR "install_test")
+set(TUTORIALS_MAKE_RELATIVE_DIR "Tutorials")
 
 # #---------- define absolute path ----------##
 cmake_path(APPEND COMPILER_TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR} ${COMPILER_TEST_RELATIVE_DIR})
 cmake_path(APPEND PROJECT_SOUCE_DIR ${CMAKE_CURRENT_SOURCE_DIR} ${PROJECT_SOUCE_RELETIVE_DIR})
 cmake_path(APPEND PROJECT_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR} ${PROJECT_INCLUDE_RELETIVE_DIR})
-cmake_path(APPEND INSTALL_TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR} ${INSTALL_TEST_RELATIVE_DIR})
 cmake_path(APPEND CMAKE_DIR ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_RELATIVE_DIR})
 cmake_path(APPEND PROJECT_TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR} ${PROJECT_TEST_RELATIVE_DIR})
 cmake_path(APPEND LLFRAME_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR} ${LLFRAME_INCLUDE_RELATIVE_DIR})
@@ -55,11 +58,10 @@ cmake_path(APPEND INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR} ${INSTALL_RELATIVE_DIR
 cmake_path(APPEND INSTALL_INCLUDE_DIR ${INSTALL_DIR} ${INSTALL_INCLUDE_RELATIVE_DIR})
 cmake_path(APPEND INSTALL_LIB_DIR ${INSTALL_DIR} ${INSTALL_LIB_RELATIVE_DIR})
 cmake_path(APPEND INSTALL_CMAKE_DIR ${INSTALL_DIR} ${CMAKE_RELATIVE_DIR})
-cmake_path(APPEND INSTALL_TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR} ${INSTALL_TEST_RELATIVE_DIR})
-
+cmake_path(APPEND TUTORIALS_MAKE_DIR ${CMAKE_CURRENT_SOURCE_DIR} ${TUTORIALS_MAKE_RELATIVE_DIR})
 # #---------- generate configure header file ----------##
-configure_file(config.h.in config.h)
-configure_file(config.h.in "${LLFRAME_INCLUDE_DIR}/config.h")
+configure_file("config.h.in" "config.h")
+configure_file("config.h.in" "${LLFRAME_INCLUDE_DIR}/config.h")
 
 # #---------- compiler settings ----------# #
 set(CMAKE_C_STANDARD 17)
@@ -68,11 +70,32 @@ set(CUDA_STANDARD 20)
 
 set(CMAKE_DEBUG_POSTFIX _d)
 set(CMAKE_INSTALL_PREFIX ${INSTALL_DIR})
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 
 if(MSVC)
     add_compile_options($<$<COMPILE_LANGUAGE:CXX>:/wd4819>)
-    string(REGEX REPLACE "\"$" " /wd4819\"" CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS}")
+    string(REGEX REPLACE "\"$" " /wd4819\"" CMAKE_CUDA_FLAGS ${CMAKE_CUDA_FLAGS})
 endif()
+
+if(APPLE)
+    set(CMAKE_INSTALL_RPATH "@executable_path/../lib")
+elseif(UNIX)
+    set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
+endif()
+
+# #---------- standard library settings ----------##
+add_library(std_lib INTERFACE)
+target_compile_features(std_lib INTERFACE cxx_std_20)
+target_compile_features(std_lib INTERFACE c_std_17)
+
+set(gcc_like_cxx "$<COMPILE_LANG_AND_ID:CXX,ARMClang,AppleClang,Clang,GNU,LCC>")
+set(msvc_cxx "$<COMPILE_LANG_AND_ID:CXX,MSVC>")
+target_compile_options(std_lib INTERFACE
+    "$<${gcc_like_cxx}:$<BUILD_INTERFACE:-Wall;-Wextra;-Wshadow;-Wformat=2;-Wunused>>"
+    "$<${msvc_cxx}:$<BUILD_INTERFACE:-W3>>"
+)
 
 # #---------- add subdirectory ----------##
 # complier test
@@ -92,9 +115,9 @@ target_include_directories(main
 target_link_libraries(main PUBLIC llframe)
 
 # # ---------- test_install ----------# #
-if(INSTALL_TEST)
-    add_subdirectory(${INSTALL_TEST_DIR})
-endif(INSTALL_TEST)
+if(TUTORIALS_MAKE)
+    add_subdirectory(${TUTORIALS_MAKE_DIR})
+endif(TUTORIALS_MAKE)
 
 # #---------- output compiler info ----------# #
 if(OUT_COMPILER_INFO)
@@ -130,6 +153,6 @@ if(${TEST_PROJECT})
     message(STATUS "Testing project ON")
     set(TEST_NAME "${PROJECT_NAME}_test")
     enable_testing()
-    configure_file(test_config.h.in test_config.h)
+    configure_file("test_config.h.in" "test_config.h")
     add_subdirectory(${PROJECT_TEST_DIR})
 endif()

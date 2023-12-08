@@ -25,6 +25,6 @@
 #include "core.hpp"
 namespace llframe
 {
-    void llframe_compile();
+    
 }
 #endif //__LLFRAME_HPP__

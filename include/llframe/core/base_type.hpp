@@ -38,6 +38,7 @@ namespace llframe
     using uint64_t = std::uint64_t;
     using float32_t = float;
     using float64_t = double;
+    using float128_t = long double;
     using size_t = std::size_t;
     using ptrdiff_t = std::ptrdiff_t;
 }

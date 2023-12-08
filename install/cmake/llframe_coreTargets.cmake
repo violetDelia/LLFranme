@@ -52,6 +52,10 @@ set(_IMPORT_PREFIX "D:/TianYi_Sync_Folder/13325386007/code/LLFrame/install")
 # Create imported target llframe_core
 add_library(llframe_core STATIC IMPORTED)
 
+set_target_properties(llframe_core PROPERTIES
+  INTERFACE_INCLUDE_DIRECTORIES "D:/TianYi_Sync_Folder/13325386007/code/LLFrame/install/include"
+)
+
 # Load information for each installed configuration.
 file(GLOB _cmake_config_files "${CMAKE_CURRENT_LIST_DIR}/llframe_coreTargets-*.cmake")
 foreach(_cmake_config_file IN LISTS _cmake_config_files)

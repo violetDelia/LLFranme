@@ -23,13 +23,10 @@
 
 #ifndef __LLFRAME_CORE_HPP__
 #define __LLFRAME_CORE_HPP__
-#include <iostream>
+#include "core/base_type.hpp"
 namespace llframe
 {
-    namespace core
-    {
-        void llframe_core_compile();
-    }
+    
 
 }
 #endif //__LLFRAME_CORE_HPP__
