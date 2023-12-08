@@ -23,4 +23,5 @@ macro(check_required_components _NAME)
 endmacro()
 
 ####################################################################################
+set(LLFrame_INCLUDE_DIR   "" )
 include("${CMAKE_CURRENT_LIST_DIR}/llframeTargets.cmake")

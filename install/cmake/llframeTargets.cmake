@@ -53,8 +53,7 @@ set(_IMPORT_PREFIX "D:/TianYi_Sync_Folder/13325386007/code/LLFrame/install")
 add_library(llframe STATIC IMPORTED)
 
 set_target_properties(llframe PROPERTIES
-  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
-  INTERFACE_LINK_LIBRARIES "llframe_core"
+  INTERFACE_LINK_LIBRARIES "\$<LINK_ONLY:llframe_core>"
 )
 
 if(CMAKE_VERSION VERSION_LESS 2.8.12)

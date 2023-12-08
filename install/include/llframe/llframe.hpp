@@ -22,9 +22,9 @@
  */
 #ifndef __LLFRAME_HPP__
 #define __LLFRAME_HPP__
-# include "core.hpp"
+#include "core.hpp"
 namespace llframe
 {
-
+    void llframe_compile();
 }
 #endif //__LLFRAME_HPP__

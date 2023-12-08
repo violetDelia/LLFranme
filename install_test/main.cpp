@@ -2,6 +2,7 @@
 
 int main()
 {
-    llframe::core::test_compiler();
+    llframe::llframe_compile();
+    llframe::core::llframe_core_compile();
     return 0;
 }

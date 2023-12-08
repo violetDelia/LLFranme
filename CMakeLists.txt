@@ -1,3 +1,20 @@
+# #---------- option cache ----------# #
+if(DEFINED INSTALL_TEST)
+    unset(INSTALL_TEST CACHE)
+endif()
+
+if(DEFINED OUT_COMPILER_INFO)
+    unset(OUT_COMPILER_INFO CACHE)
+endif()
+
+if(DEFINED TEST_PROJECT)
+    unset(TEST_PROJECT CACHE)
+endif()
+
+if(DEFINED BUILD_SHARED_LIBS)
+    unset(BUILD_SHARED_LIBS CACHE)
+endif()
+
 # #---------- build options ----------# #
 option(OUT_COMPILER_INFO "test project" OFF)
 option(TEST_PROJECT "test project" ON)
@@ -72,7 +89,7 @@ target_include_directories(main
     $<BUILD_INTERFACE:${PROJECT_INCLUDE_DIR}>
     $<INSTALL_INTERFACE:${INSTALL_INCLUDE_RELATIVE_DIR}>
 )
-target_link_libraries(main PRIVATE llframe)
+target_link_libraries(main PUBLIC llframe)
 
 # # ---------- test_install ----------# #
 if(INSTALL_TEST)
@@ -96,19 +113,17 @@ install(DIRECTORY ${PROJECT_INCLUDE_DIR} DESTINATION ${INSTALL_DIR})
 
 # config.cmake
 include(CMakePackageConfigHelpers)
-
 configure_package_config_file("${CMAKE_DIR}/Config.cmake.in"
     "${CMAKE_CURRENT_BINARY_DIR}/LLFrameConfig.cmake"
-    INSTALL_DESTINATION ${INSTALL_CMAKE_DIR})
-install(FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/LLFrameConfig.cmake
-
-    # ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
-    DESTINATION ${INSTALL_CMAKE_DIR}
+    INSTALL_DESTINATION ${INSTALL_CMAKE_DIR}
 )
-
-# configure_file("${CMAKE_DIR}/Config.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}}/${PROJECT_NAME}Config.cmake")
-# install(FILES "${CMAKE_CURRENT_BINARY_DIR}}/${PROJECT_NAME}Config.cmake" DESTINATION ${INSTALL_CMAKE_DIR})
+write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/LLFrameConfigVersion.cmake"
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY SameMajorVersion)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/LLFrameConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/LLFrameConfigVersion.cmake"
+    DESTINATION ${INSTALL_CMAKE_DIR})
 
 # #---------- test ----------##
 if(${TEST_PROJECT})

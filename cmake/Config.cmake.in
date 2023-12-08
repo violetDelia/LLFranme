@@ -1,2 +1,3 @@
 @PACKAGE_INIT@
+set(LLFrame_INCLUDE_DIR   "@CMAKE_INSTALL_FULL_INCLUDEDIR@" )
 include("${CMAKE_CURRENT_LIST_DIR}/llframeTargets.cmake")

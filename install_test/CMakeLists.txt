@@ -1,4 +1,5 @@
-find_package(LLFrame REQUIRED PATHS ${INSTALL_DIR})
+find_package(LLFrame 1.0.0 REQUIRED PATHS ${INSTALL_DIR})
+message(${LLFrame_VERSION})
 # # ---------- install_test ----------# #
 add_executable(install_test "${CMAKE_CURRENT_SOURCE_DIR}/main.cpp")
 target_include_directories(install_test
@@ -7,5 +8,5 @@ target_include_directories(install_test
     $<INSTALL_INTERFACE:${NONE}>
 )
 message(${INSTALL_LIB_DIR})
-target_link_libraries(install_test PRIVATE LLFrame)
+target_link_libraries(install_test PRIVATE llframe)
 

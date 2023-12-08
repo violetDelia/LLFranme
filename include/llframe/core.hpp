@@ -28,7 +28,8 @@ namespace llframe
 {
     namespace core
     {
-        void test_compiler();
+        void llframe_core_compile();
     }
+
 }
 #endif //__LLFRAME_CORE_HPP__
