@@ -41,6 +41,7 @@ namespace llframe
     using float128_t = long double;
     using size_t = std::size_t;
     using ptrdiff_t = std::ptrdiff_t;
-}
+
+} // llframe
 
 #endif //__LLFRAME_BASE_TYPE_HPP__

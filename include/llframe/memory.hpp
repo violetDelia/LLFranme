@@ -13,21 +13,18 @@
 //    limitations under the License.
 
 /**
- * @file core.hpp
- * @brief 框架的基础定义
+ * @file memory.hpp
+ * @brief 内存相关的组件
  * @details
  * @author 时光丶人爱
  * @date 2023-12-7
  * @copyright Apache 2.0
  */
-
-#ifndef __LLFRAME_CORE_HPP__
-#define __LLFRAME_CORE_HPP__
-#include "core/base_type.hpp"
-#include "core/exception.hpp"
+#ifndef __LLFRAME_MEMORY_HPP__
+#define __LLFRAME_MEMORY_HPP__
+#include "memory/allocator.hpp"
 namespace llframe
 {
-    
 
-}// llframe
-#endif //__LLFRAME_CORE_HPP__
+} // llframe
+#endif //__LLFRAME_MEMORY_HPP__

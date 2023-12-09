@@ -116,14 +116,34 @@ TEST(base_type, float64_t)
     ASSERT_EQ(std::numeric_limits<llframe::float64_t>::has_infinity, true);
     ASSERT_EQ(std::numeric_limits<llframe::float64_t>::has_quiet_NaN, true);
 }
+TESE(base_type, float128_t)
+{
+    ASSERT_EQ(sizeof(llframe::float128_t), 16);
+    ASSERT_EQ(std::numeric_limits<llframe::float128_t>::max(), LDBL_MAX);
+    ASSERT_EQ(std::numeric_limits<llframe::float128_t>::min(), LDBL_MIN);
+    ASSERT_EQ(std::is_integral<llframe::float128_t>::value, false);
+    ASSERT_EQ(std::is_floating_point<llframe::float128_t>::value, true);
+    ASSERT_EQ(std::is_signed<llframe::float128_t>::value, true);
+    ASSERT_EQ(std::is_unsigned<llframe::float128_t>::value, false);
+    ASSERT_EQ(std::numeric_limits<llframe::float128_t>::is_bounded, true);
+    ASSERT_EQ(std::numeric_limits<llframe::float64_t>::has_infinity, true);
+    ASSERT_EQ(std::numeric_limits<llframe::float128_t>::has_quiet_NaN, true);
+}
 TEST(base_type, size_t)
 {
-
     ASSERT_EQ(std::is_integral<llframe::size_t>::value, true);
     ASSERT_EQ(std::is_floating_point<llframe::size_t>::value, false);
     ASSERT_EQ(std::is_signed<llframe::size_t>::value, false);
     ASSERT_EQ(std::is_unsigned<llframe::size_t>::value, true);
     ASSERT_EQ(std::numeric_limits<llframe::size_t>::is_bounded, true);
+}
+TEST(base_type, ptrdiff_t)
+{
+    ASSERT_EQ(std::is_integral<llframe::ptrdiff_t>::value, true);
+    ASSERT_EQ(std::is_floating_point<llframe::ptrdiff_t>::value, false);
+    ASSERT_EQ(std::is_signed<llframe::ptrdiff_t>::value, true);
+    ASSERT_EQ(std::is_unsigned<llframe::ptrdiff_t>::value, false);
+    ASSERT_EQ(std::numeric_limits<llframe::ptrdiff_t>::is_bounded, true);
 }
 
 #endif // TEST_BASE_TYPE

@@ -5,6 +5,6 @@ int main()
 {
     llframe::int16_t a = 3;
     if (sizeof(a) == sizeof(std::int16_t))
-        std::cout << "base type ok\n";
+        std::cout << "core::base_type ok!\n";
     return 0;
 }

@@ -13,21 +13,24 @@
 //    limitations under the License.
 
 /**
- * @file core.hpp
- * @brief 框架的基础定义
+ * @file allocator.hpp
+ * @brief 基础内存分配器
  * @details
  * @author 时光丶人爱
- * @date 2023-12-7
+ * @date 2023-12-8
  * @copyright Apache 2.0
  */
 
-#ifndef __LLFRAME_CORE_HPP__
-#define __LLFRAME_CORE_HPP__
-#include "core/base_type.hpp"
-#include "core/exception.hpp"
+#ifndef __LLFRAME_ALLOCATOR_HPP__
+#define __LLFRAME_ALLOCATOR_HPP__
+#include <memory>
+
 namespace llframe
 {
-    
+    template <typename Ty>
+    // 分配器 保证编译器分配内存
+    using Allocator = std::allocator<Ty>;
 
-}// llframe
-#endif //__LLFRAME_CORE_HPP__
+} // llframe
+
+#endif //__LLFRAME_CONFIG_HPP__
