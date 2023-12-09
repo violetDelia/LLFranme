@@ -29,8 +29,20 @@ namespace llframe
 {
     template <typename Ty>
     // 分配器 保证编译器分配内存
-    using Allocator = std::allocator<Ty>;
+    class Allocator : private std::allocator<Ty>
+    {
+    private:
+        using father = std::allocator<Ty>;
 
+    public:
+        using value_type = father::value_type;
+        using size_type = father::size_type;
+        using difference_type = father::difference_type;
+        using propagate_on_container_move_assignment = father::propagate_on_container_move_assignment;
+        using is_always_equal = father::is_always_equal;
+        using father::allocate;
+        using father::deallocate;
+    };
 } // llframe
 
 #endif //__LLFRAME_CONFIG_HPP__

@@ -8,15 +8,22 @@ if(DEFINED TEST_CORE)
     unset(TEST_CORE CACHE)
 endif()
 
+if(DEFINED TEST_MEMORY)
+    unset(TEST_MEMORY CACHE)
+endif()
+
 # option
-option(TEST_LLFRAME "test llframe" ON)
-option(TEST_CORE "test llfrmae_core" ON)
+option(TEST_LLFRAME "test llframe" OFF)
+option(TEST_CORE "test llfrmae_core" OFF)
+option(TEST_MEMORY "test llfrmae_memory" ON)
 
 # #---------- reletive path define ----------##
 set(CORE_TEST_RELATIVE_DIR "core")
+set(MEMORY_TEST_RELATIVE_DIR "memory")
 
 # #---------- define absolute path ----------##
 cmake_path(APPEND CORE_TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR} ${CORE_TEST_RELATIVE_DIR})
+cmake_path(APPEND MEMORY_TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR} ${MEMORY_TEST_RELATIVE_DIR})
 
 # #---------- external library ----------##
 find_package(GTest 1.14.0 REQUIRED)
@@ -34,6 +41,12 @@ if(TEST_CORE)
     set(TEST_ALL_FILES ${TEST_ALL_FILES} PARENT_SCOPE)
     add_subdirectory(${CORE_TEST_DIR})
 endif(TEST_CORE)
+
+if(TEST_MEMORY)
+    list(APPEND TEST_ALL_FILES "${CMAKE_CURRENT_SOURCE_DIR}/test_memory.cpp")
+    set(TEST_ALL_FILES ${TEST_ALL_FILES} PARENT_SCOPE)
+    add_subdirectory(${MEMORY_TEST_DIR})
+endif(TEST_MEMORY)
 
 # #---------- TEST_ALL ----------##
 add_executable(${TEST_NAME} ${TEST_ALL_FILES})

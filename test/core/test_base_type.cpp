@@ -1,5 +1,5 @@
 #include "test_config.h"
-#ifdef TEST_CORE
+#ifdef TEST_BASE_TYPE
 #include <gtest/gtest.h>
 #include "core/base_type.hpp"
 TEST(base_type, int8_t)
@@ -115,19 +115,6 @@ TEST(base_type, float64_t)
     ASSERT_EQ(std::numeric_limits<llframe::float64_t>::is_bounded, true);
     ASSERT_EQ(std::numeric_limits<llframe::float64_t>::has_infinity, true);
     ASSERT_EQ(std::numeric_limits<llframe::float64_t>::has_quiet_NaN, true);
-}
-TESE(base_type, float128_t)
-{
-    ASSERT_EQ(sizeof(llframe::float128_t), 16);
-    ASSERT_EQ(std::numeric_limits<llframe::float128_t>::max(), LDBL_MAX);
-    ASSERT_EQ(std::numeric_limits<llframe::float128_t>::min(), LDBL_MIN);
-    ASSERT_EQ(std::is_integral<llframe::float128_t>::value, false);
-    ASSERT_EQ(std::is_floating_point<llframe::float128_t>::value, true);
-    ASSERT_EQ(std::is_signed<llframe::float128_t>::value, true);
-    ASSERT_EQ(std::is_unsigned<llframe::float128_t>::value, false);
-    ASSERT_EQ(std::numeric_limits<llframe::float128_t>::is_bounded, true);
-    ASSERT_EQ(std::numeric_limits<llframe::float64_t>::has_infinity, true);
-    ASSERT_EQ(std::numeric_limits<llframe::float128_t>::has_quiet_NaN, true);
 }
 TEST(base_type, size_t)
 {

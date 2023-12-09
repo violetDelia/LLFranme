@@ -24,10 +24,13 @@
 #ifndef __LLFRAME_TEST_CONFIG_HPP__
 #define __LLFRAME_TEST_CONFIG_HPP__
 
-#cmakedefine TEST_STD
 #cmakedefine TEST_LLFRAME
 #cmakedefine TEST_CORE
 #ifdef TEST_CORE
 #cmakedefine TEST_BASE_TYPE
 #endif // TEST_CORE
+#cmakedefine TEST_MEMORY
+#ifdef TEST_MEMORY
+#cmakedefine TEST_ALLOCATOR
+#endif // TEST_MEMORY
 #endif //__LLFRAME_TEST_CONFIG_HPP__

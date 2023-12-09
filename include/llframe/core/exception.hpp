@@ -26,7 +26,6 @@
 #include <source_location>
 #include <string>
 #include <stdio.h>
-#include <exception>
 
 #define __UN_IMPLEMENTED__                              \
     printf("Not implemented:\n");                       \
@@ -117,15 +116,12 @@ namespace llframe
 #define __LLFRAME_TRY_CATCH_BEGIN__ \
     try                             \
     {
-#define __LLFRAME_TRY_CATCH_END__       \
-    }                                   \
-    catch (llframe::Exception e)        \
-    {                                   \
-        __LLFRAME_EXCEPTION_UPDATE__(e) \
-    }
-
-#define __LLFRAME_TRY_CATCH_WITH_OTHER_END__                                 \
-    __LLFRAME_TRY_CATCH_END__                                                \
+#define __LLFRAME_TRY_CATCH_END__                                            \
+    }                                                                        \
+    catch (llframe::Exception e)                                             \
+    {                                                                        \
+        __LLFRAME_EXCEPTION_UPDATE__(e)                                      \
+    }                                                                        \
     catch (...)                                                              \
     {                                                                        \
         __LLFRAME_THROW_EXCEPTION__(llframe::Exception, "unknown exception") \
