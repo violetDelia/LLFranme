@@ -27,8 +27,12 @@
 
 namespace llframe
 {
+    /**
+     * @brief 分配器,确保能够编译时分配内存
+     *
+     * @tparam Ty 分配对象的类型
+     */
     template <typename Ty>
-    // 分配器 保证编译器分配内存
     class Allocator : private std::allocator<Ty>
     {
     private:
