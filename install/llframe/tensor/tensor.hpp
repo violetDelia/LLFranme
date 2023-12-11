@@ -13,16 +13,20 @@
 //    limitations under the License.
 
 /**
- * @file config.h
- * @brief 编译宏文件
- * @details 根据CMakeLists.txt编译选项生成
+ * @file tensor.hpp
+ * @brief 张量
+ * @details
  * @author 时光丶人爱
- * @date 2023-12-7
+ * @date 2023-12-9
+ * @see If you have any questions about the code or if you think there is a better way to implement
+ * it,please contact me by email 1152488956@qq.com.
  * @copyright Apache 2.0
  */
+#ifndef __LLFRAME_TENSOR_HPP__
+#define __LLFRAME_TENSOR_HPP__
 
-#ifndef __LLFRAME_CONFIG_HPP__
-#define __LLFRAME_CONFIG_HPP__
-
-
-#endif //__LLFRAME_CONFIG_HPP__
+namespace llframe
+{
+    
+}// llframe
+#endif //__LLFRAME_TENSOR_HPP__

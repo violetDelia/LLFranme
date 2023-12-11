@@ -13,20 +13,18 @@
 //    limitations under the License.
 
 /**
- * @file core.hpp
- * @brief 框架的基础定义
+ * @file allocator.ixx
+ * @brief 基础内存分配器
  * @details
  * @author 时光丶人爱
- * @date 2023-12-7
+ * @date 2023-12-8
  * @copyright Apache 2.0
  */
 
-#ifndef __LLFRAME_CORE_HPP__
-#define __LLFRAME_CORE_HPP__
-#include "core/base_type.hpp"
-namespace llframe
+module;
+#include "memory/allocator.hpp"
+export module llframe.memory.allocator;
+export namespace llframe
 {
-    
-
+    using llframe::Allocator;
 }
-#endif //__LLFRAME_CORE_HPP__

@@ -9,7 +9,6 @@ cmake_path(APPEND MEMORY_MODULE_DIR ${CMAKE_CURRENT_SOURCE_DIR} ${MEMORY_MODULE_
 # #---------- seach sorce files ----------##
 aux_source_directory(${CORE_MODULE_DIR} CORE_MODULE_FILES)
 aux_source_directory(${MEMORY_MODULE_DIR} MEMORY_MODULE_FILES)
-
 # #---------- set files global ----------##
 set(LLFRAME_MODULE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/llframe.ixx" PARENT_SCOPE)
 set(CORE_MODULE_FILES ${CORE_MODULE_FILES} PARENT_SCOPE)

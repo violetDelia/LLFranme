@@ -13,14 +13,16 @@
 //    limitations under the License.
 
 /**
- * @file memory.ixx
- * @brief 内存相关的组件
- * @details
+ * @file config.h
+ * @brief 编译宏文件
+ * @details 根据CMakeLists.txt编译选项生成
  * @author 时光丶人爱
  * @date 2023-12-7
  * @copyright Apache 2.0
  */
 
-module;
-export module llframe.memory;
-export import llframe.memory.allocator;
+#ifndef __LLFRAME_CONFIG_HPP__
+#define __LLFRAME_CONFIG_HPP__
+#define __LLFRAME_USE_MODULE__
+
+#endif //__LLFRAME_CONFIG_HPP__

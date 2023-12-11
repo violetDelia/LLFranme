@@ -13,14 +13,28 @@
 //    limitations under the License.
 
 /**
- * @file memory.ixx
- * @brief 内存相关的组件
+ * @file size.hpp
+ * @brief 形状
  * @details
  * @author 时光丶人爱
- * @date 2023-12-7
+ * @date 2023-12-9
+ * @see If you have any questions about the code or if you think there is a better way to implement
+ * it,please contact me by email 1152488956@qq.com.
  * @copyright Apache 2.0
  */
+#ifndef __LLFRAME_SIZE_HPP__
+#define __LLFRAME_SIZE_HPP__
+#include <array>
+namespace llframe
+{
 
-module;
-export module llframe.memory;
-export import llframe.memory.allocator;
+    template <typename... Ty>
+    class Size
+    {
+    public:
+    protected:
+    private:
+    }
+
+} // llframe
+#endif //__LLFRAME_SIZE_HPP__

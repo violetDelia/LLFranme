@@ -13,18 +13,23 @@
 //    limitations under the License.
 
 /**
- * @file llframe.hpp
- * @brief
+ * @file device.hpp
+ * @brief 装置的定义
  * @details
  * @author 时光丶人爱
- * @date 2023-12-7
+ * @date 2023-12-11
  * @copyright Apache 2.0
  */
-#ifndef __LLFRAME_HPP__
-#define __LLFRAME_HPP__
-#include "core.hpp"
+#ifndef __LLFRAME_MEMORY_HPP__
+#define __LLFRAME_MEMORY_HPP__
+#include "config.h"
+#ifdef __LLFRAME_USE_MODULE__
+import llframe.memory.allocator;
+#else
+#include "memory/allocator.hpp"
+#endif // __LLFRAME_USE_MODULE__
 namespace llframe
 {
-    
-}
-#endif //__LLFRAME_HPP__
+
+} // llframe
+#endif //__LLFRAME_MEMORY_HPP__

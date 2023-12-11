@@ -1,4 +1,5 @@
-#include "llframe/llframe.hpp"
+import llframe;
+//#include "llframe/llframe.hpp"
 #include <iostream>
 #include <cstdint>
 int main()

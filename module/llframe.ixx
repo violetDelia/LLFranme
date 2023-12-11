@@ -26,3 +26,4 @@
 module;
 export module llframe;
 export import llframe.core;
+export import llframe.memory;

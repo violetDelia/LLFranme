@@ -1,5 +1,4 @@
 find_package(LLFrame 1.0.0 REQUIRED PATHS ${INSTALL_DIR})
-message(${LLFrame_VERSION})
 
 # # ---------- install_test ----------# #
 add_executable(install_test "${CMAKE_CURRENT_SOURCE_DIR}/install_test.cpp")

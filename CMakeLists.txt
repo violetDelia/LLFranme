@@ -126,8 +126,8 @@ endif(OUT_COMPILER_INFO)
 
 # #---------- install ----------##
 # install
-install(DIRECTORY ${PROJECT_INCLUDE_DIR} DESTINATION ${INSTALL_DIR})
-
+install(DIRECTORY ${LLFRAME_INCLUDE_DIR} DESTINATION ${INSTALL_DIR})
+#install(DIRECTORY ${LLFRAME_MODULE_DIR} DESTINATION ${INSTALL_DIR})
 # config.cmake
 include(CMakePackageConfigHelpers)
 configure_package_config_file("${CMAKE_DIR}/Config.cmake.in"
