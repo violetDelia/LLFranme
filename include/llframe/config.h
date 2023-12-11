@@ -23,6 +23,6 @@
 
 #ifndef __LLFRAME_CONFIG_HPP__
 #define __LLFRAME_CONFIG_HPP__
-
+#define __LLFRAME_USE_MODULE__
 
 #endif //__LLFRAME_CONFIG_HPP__

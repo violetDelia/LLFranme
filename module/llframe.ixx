@@ -13,7 +13,7 @@
 //    limitations under the License.
 
 /**
- * @file llframe.hpp
+ * @file llframe.ixx
  * @brief
  * @details
  * @author 时光丶人爱
@@ -22,12 +22,7 @@
  * it,please contact me by email 1733535832@qq.com.
  * @copyright Apache 2.0
  */
-#ifndef __LLFRAME_HPP__
-#define __LLFRAME_HPP__
-#include "core/core.hpp"
-#include "memory/memory.hpp"
-namespace llframe
-{
-    
-}// llframe
-#endif //__LLFRAME_HPP__
+
+module;
+export module llframe;
+export import llframe.core;

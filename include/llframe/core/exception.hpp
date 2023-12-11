@@ -40,7 +40,7 @@ namespace llframe
 
     /**
      * @brief 异常
-     * 
+     *
      */
     class Exception
     {
@@ -48,7 +48,7 @@ namespace llframe
         constexpr Exception() = delete;
 
         constexpr Exception(const Exception &other) noexcept = default;
-        
+
         constexpr Exception(Exception &&other) noexcept = default;
 
         /**

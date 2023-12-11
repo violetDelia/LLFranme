@@ -13,21 +13,28 @@
 //    limitations under the License.
 
 /**
- * @file llframe.hpp
- * @brief
+ * @file base_type.ixx
+ * @brief 基础类型定义
  * @details
  * @author 时光丶人爱
  * @date 2023-12-7
- * @see If you have any questions about the code or if you think there is a better way to implement
- * it,please contact me by email 1733535832@qq.com.
  * @copyright Apache 2.0
  */
-#ifndef __LLFRAME_HPP__
-#define __LLFRAME_HPP__
-#include "core/core.hpp"
-#include "memory/memory.hpp"
-namespace llframe
+module;
+#include "core/base_type.hpp"
+export module llframe.core.base_type;
+export namespace llframe
 {
-    
-}// llframe
-#endif //__LLFRAME_HPP__
+    using llframe::float32_t;
+    using llframe::float64_t;
+    using llframe::int16_t;
+    using llframe::int32_t;
+    using llframe::int64_t;
+    using llframe::int8_t;
+    using llframe::ptrdiff_t;
+    using llframe::size_t;
+    using llframe::uint16_t;
+    using llframe::uint32_t;
+    using llframe::uint64_t;
+    using llframe::uint8_t;
+}

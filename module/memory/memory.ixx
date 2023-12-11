@@ -13,21 +13,13 @@
 //    limitations under the License.
 
 /**
- * @file llframe.hpp
- * @brief
+ * @file memory.ixx
+ * @brief 内存相关的组件
  * @details
  * @author 时光丶人爱
  * @date 2023-12-7
- * @see If you have any questions about the code or if you think there is a better way to implement
- * it,please contact me by email 1733535832@qq.com.
  * @copyright Apache 2.0
  */
-#ifndef __LLFRAME_HPP__
-#define __LLFRAME_HPP__
-#include "core/core.hpp"
-#include "memory/memory.hpp"
-namespace llframe
-{
-    
-}// llframe
-#endif //__LLFRAME_HPP__
+
+module;
+export module llframe.memory;

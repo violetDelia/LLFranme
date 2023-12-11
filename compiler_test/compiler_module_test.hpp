@@ -15,4 +15,23 @@ namespace module_test
 
     void module_import_std();
 
+    template <typename T,size_t device>
+    float *malloc_cuda_(T *a, int len)
+    {
+        return malloc_cuda(a, len, device);
+    };
+
+    template <typename T,size_t device>
+    void add_one_(T *a,  int len)
+    {
+        return add_one(a, len, device);
+    };
+    template <typename T,size_t device>
+    float *free_to_host_(T *a, T *b, int len)
+    {
+        return free_to_host(a, b, len,device);
+    };
+
+
+
 }

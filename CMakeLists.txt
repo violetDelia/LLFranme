@@ -19,12 +19,17 @@ if(DEFINED TUTORIALS_MAKE)
     unset(TUTORIALS_MAKE CACHE)
 endif()
 
+if(DEFINED __LLFRAME_USE_MODULE__)
+    unset(__LLFRAME_USE_MODULE__ CACHE)
+endif()
+
 # #---------- build options ----------# #
 option(OUT_COMPILER_INFO "out compiler information" OFF)
 option(TEST_PROJECT "test project" ON)
-option(COMPILER_TEST_OPTION "Test if the compilation is working" OFF)
+option(COMPILER_TEST_OPTION "Test if the compilation is working" ON)
 option(BUILD_SHARED_LIBS "Build using shared libraries" OFF)
 option(TUTORIALS_MAKE "TUTORIALS_MAKE" ON)
+option(__LLFRAME_USE_MODULE__ "compiler module" ON)
 
 # #---------- cmake settings ----------# #
 CMAKE_MINIMUM_REQUIRED(VERSION 3.25)
@@ -40,6 +45,7 @@ set(CMAKE_RELATIVE_DIR "cmake")
 set(PROJECT_TEST_RELATIVE_DIR "test")
 set(LLFRAME_INCLUDE_RELATIVE_DIR "include/llframe")
 set(LLFRAME_SOURCE_RELATIVE_DIR "src")
+set(LLFRAME_MODULE_RELATIVE_DIR "module")
 set(INSTALL_RELATIVE_DIR "install")
 set(INSTALL_INCLUDE_RELATIVE_DIR "include")
 set(INSTALL_LIB_RELATIVE_DIR "lib")
@@ -54,11 +60,13 @@ cmake_path(APPEND CMAKE_DIR ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_RELATIVE_DIR})
 cmake_path(APPEND PROJECT_TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR} ${PROJECT_TEST_RELATIVE_DIR})
 cmake_path(APPEND LLFRAME_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR} ${LLFRAME_INCLUDE_RELATIVE_DIR})
 cmake_path(APPEND LLFRAME_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR} ${LLFRAME_SOURCE_RELATIVE_DIR})
+cmake_path(APPEND LLFRAME_MODULE_DIR ${CMAKE_CURRENT_SOURCE_DIR} ${LLFRAME_MODULE_RELATIVE_DIR})
 cmake_path(APPEND INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR} ${INSTALL_RELATIVE_DIR})
 cmake_path(APPEND INSTALL_INCLUDE_DIR ${INSTALL_DIR} ${INSTALL_INCLUDE_RELATIVE_DIR})
 cmake_path(APPEND INSTALL_LIB_DIR ${INSTALL_DIR} ${INSTALL_LIB_RELATIVE_DIR})
 cmake_path(APPEND INSTALL_CMAKE_DIR ${INSTALL_DIR} ${CMAKE_RELATIVE_DIR})
 cmake_path(APPEND TUTORIALS_MAKE_DIR ${CMAKE_CURRENT_SOURCE_DIR} ${TUTORIALS_MAKE_RELATIVE_DIR})
+
 # #---------- generate configure header file ----------##
 configure_file("config.h.in" "config.h")
 configure_file("config.h.in" "${LLFRAME_INCLUDE_DIR}/config.h")
@@ -79,29 +87,15 @@ if(MSVC)
     string(REGEX REPLACE "\"$" " /wd4819\"" CMAKE_CUDA_FLAGS ${CMAKE_CUDA_FLAGS})
 endif()
 
-if(APPLE)
-    set(CMAKE_INSTALL_RPATH "@executable_path/../lib")
-elseif(UNIX)
-    set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
-endif()
-
-# #---------- standard library settings ----------##
-add_library(std_lib INTERFACE)
-target_compile_features(std_lib INTERFACE cxx_std_20)
-target_compile_features(std_lib INTERFACE c_std_17)
-
-set(gcc_like_cxx "$<COMPILE_LANG_AND_ID:CXX,ARMClang,AppleClang,Clang,GNU,LCC>")
-set(msvc_cxx "$<COMPILE_LANG_AND_ID:CXX,MSVC>")
-target_compile_options(std_lib INTERFACE
-    "$<${gcc_like_cxx}:$<BUILD_INTERFACE:-Wall;-Wextra;-Wshadow;-Wformat=2;-Wunused>>"
-    "$<${msvc_cxx}:$<BUILD_INTERFACE:-W3>>"
-)
-
 # #---------- add subdirectory ----------##
 # complier test
 if(COMPILER_TEST_OPTION)
     add_subdirectory(${COMPILER_TEST_DIR})
 endif(COMPILER_TEST_OPTION)
+
+if(__LLFRAME_USE_MODULE__)
+    add_subdirectory(${LLFRAME_MODULE_DIR})
+endif(__LLFRAME_USE_MODULE__)
 
 add_subdirectory(${PROJECT_SOUCE_DIR})
 
