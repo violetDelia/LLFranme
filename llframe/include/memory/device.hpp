@@ -21,15 +21,43 @@
  * @copyright Apache 2.0
  */
 
-#ifndef __LLFRAME_MEMORY_HPP__
-#define __LLFRAME_MEMORY_HPP__
+#ifndef __LLFRAME_DEVICE_HPP__
+#define __LLFRAME_DEVICE_HPP__
 #ifdef __LLFRAME_USE_MODULE__
-import llframe.memory.allocator;
+import llframe.core.base_type;
 #else
-#include "memory/allocator.hpp"
+#include "core/base_type.hpp"
 #endif // __LLFRAME_USE_MODULE__
 namespace llframe
 {
 
+    namespace device
+    {
+        template <size_t Id = 0>
+        struct Device
+        {
+            /**
+             * @brief 获取设备的id
+             * 
+             *
+             * @return Id
+             */
+            consteval inline size_t get_id() noexcept
+            {
+                return Id;
+            }
+        };
+
+        template <size_t Id>
+        struct Host : Device<Id>
+        {
+        };
+
+        template <size_t Id>
+        struct GPU : Device<Id>
+        {
+        };
+
+    }
 } // llframe
 #endif //__LLFRAME_MEMORY_HPP__

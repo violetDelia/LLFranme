@@ -22,7 +22,13 @@
  */
 #ifndef __LLFRAME_MEMORY_HPP__
 #define __LLFRAME_MEMORY_HPP__
+#ifdef __LLFRAME_USE_MODULE__
+import llframe.memory.device;
+import llframe.memory.allocator;
+#else
+#include "memory/device.hpp"
 #include "memory/allocator.hpp"
+#endif // __LLFRAME_USE_MODULE__
 namespace llframe
 {
 

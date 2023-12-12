@@ -24,3 +24,4 @@
 module;
 export module llframe.memory;
 export import llframe.memory.allocator;
+export import llframe.memory.device;

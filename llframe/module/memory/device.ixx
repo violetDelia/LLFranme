@@ -13,20 +13,20 @@
 //    limitations under the License.
 
 /**
- * @file tensor.hpp
- * @brief 张量
+ * @file device.ixx
+ * @brief 设备的定义
  * @details
  * @author 时光丶人爱
- * @date 2023-12-9
- * @see If you have any questions about the code or if you think there is a better way to implement
- * it,please contact me by email 1152488956@qq.com.
+ * @date 2023-12-11
  * @copyright Apache 2.0
  */
-#ifndef __LLFRAME_TENSOR_HPP__
-#define __LLFRAME_TENSOR_HPP__
-
-namespace llframe
+module;
+#include "memory/device.hpp"
+export module llframe.memory.device;
+export namespace llframe::device
 {
+
+        using llframe::device::GPU;
+        using llframe::device::Host;
     
-}// llframe
-#endif //__LLFRAME_TENSOR_HPP__
+}
