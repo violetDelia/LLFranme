@@ -1,7 +1,7 @@
 
 ####### Expanded from @PACKAGE_INIT@ by configure_package_config_file() #######
 ####### Any changes to this file will be overwritten by the next CMake run ####
-####### The input file was Config.cmake.in                            ########
+####### The input file was LLFrameConfig.cmake.in                            ########
 
 get_filename_component(PACKAGE_PREFIX_DIR "${CMAKE_CURRENT_LIST_DIR}/../" ABSOLUTE)
 
@@ -23,5 +23,7 @@ macro(check_required_components _NAME)
 endmacro()
 
 ####################################################################################
-set(LLFrame_INCLUDE_DIR   "" )
-include("${CMAKE_CURRENT_LIST_DIR}/llframeTargets.cmake")
+set(LLFrame_INCLUDE_DIR   "D:/TianYi_Sync_Folder/13325386007/code/LLFrame/install/include/llframe")
+set(LLFrame_MODULE_DIR "D:/TianYi_Sync_Folder/13325386007/code/LLFrame/install/include/llframe/__MODULE__")
+file(GLOB_RECURSE LLFrame_MODULE_FILES "D:/TianYi_Sync_Folder/13325386007/code/LLFrame/install/include/llframe/__MODULE__/*.ixx")
+include("${CMAKE_CURRENT_LIST_DIR}/LLFrameTargets.cmake")

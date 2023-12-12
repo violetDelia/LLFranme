@@ -1,5 +1,5 @@
 /.vscode
-/build
+build
 /config.h.in
 /main.cpp
 src
