@@ -83,5 +83,5 @@ target_include_directories(main
     $<BUILD_INTERFACE:${LLFRAME_INCLUDE_DIR}>
     $<INSTALL_INTERFACE:${LLFRAME_INCLUDE_DIR}>
 )
-target_link_libraries(main PRIVATE LLFrame)
+target_link_libraries(main PRIVATE LLFrame )
 

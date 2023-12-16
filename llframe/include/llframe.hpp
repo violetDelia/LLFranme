@@ -31,6 +31,7 @@ import llframe.memory;
 #else
 #include "memory/memory.hpp"
 #include "core/core.hpp"
+#include "core/exception_helper.hpp"
 #endif // __LLFRAME_USE_MODULE__
 namespace llframe
 {

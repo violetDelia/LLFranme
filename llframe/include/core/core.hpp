@@ -24,6 +24,7 @@
 #ifndef __LLFRAME_CORE_HPP__
 #define __LLFRAME_CORE_HPP__
 #include "config.h"
+#include "core/exception_helper.hpp"
 #ifdef __LLFRAME_USE_MODULE__
 import llframe.core.base_type;
 import llframe.core.exception;

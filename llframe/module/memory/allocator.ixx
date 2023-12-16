@@ -26,5 +26,6 @@ module;
 export module llframe.memory.allocator;
 export namespace llframe
 {
+    // using llframe::_Allocator_Base;
     using llframe::Allocator;
 }

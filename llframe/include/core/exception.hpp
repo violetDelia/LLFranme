@@ -27,17 +27,11 @@
 #include <string>
 #include <stdio.h>
 
-#define __UN_IMPLEMENTED__                              \
-    printf("Not implemented:\n");                       \
-    printf("\tin file:\t %s\tline:%d\n",                \
-           std::source_location::current().file_name(), \
-           std::source_location::current().line());     \
-    printf("\tfunction name :\t %s\n ",                 \
-           std::source_location::current().function_name());
+#include <iostream>
 
+// Exception
 namespace llframe
 {
-
     /**
      * @brief 异常
      *
@@ -45,7 +39,7 @@ namespace llframe
     class Exception
     {
     public:
-        constexpr Exception() = delete;
+        constexpr Exception() = default;
 
         constexpr Exception(const Exception &other) noexcept = default;
 
@@ -57,7 +51,7 @@ namespace llframe
          *
          * @param message 异常信息
          */
-        Exception(const char *message) noexcept;
+        constexpr Exception(const char *message) noexcept;
 
         /**
          * @brief 构造Exception
@@ -68,7 +62,17 @@ namespace llframe
          * @param line 所在源文件行数
          * @param func_name 所在源文件的函数名
          */
-        Exception(const char *message, const char *file, const size_t line, const char *func_name) noexcept;
+        constexpr Exception(const char *message, const char *file, const size_t line, const char *func_name) noexcept;
+
+        /**
+         * @brief 构造Exception
+         *
+         *
+         * @param file 源文件名
+         * @param line 所在源文件行数
+         * @param func_name 所在源文件的函数名
+         */
+        constexpr Exception(const char *file, const size_t line, const char *func_name) noexcept;
 
         /**
          * @brief 记录异常的传递信息
@@ -79,7 +83,7 @@ namespace llframe
          * @param func_name 函数名
          * @return  异常信息
          */
-        [[nodiscard]] virtual std::string what() const noexcept;
+        [[nodiscard]] constexpr virtual std::string what() const noexcept;
 
         /**
          * @brief 记录异常的传递信息
@@ -89,42 +93,88 @@ namespace llframe
          * @param line 行数
          * @param func_name 函数名
          */
-        void up_info(const char *file, const size_t line, const char *func_name) noexcept;
+        constexpr void up_info(const char *file, const size_t line, const char *func_name) noexcept;
 
-    protected:
+        // protected:
+    public:
         // 异常信息
-        const std::string message{"unknown exception"};
+        const std::string message{"unknown exception!"};
         // 位置信息
         std::string locations{"\n"};
     };
 
-} // llframe
-// 抛出异常
-#define __LLFRAME_THROW_EXCEPTION__(Exception, message)          \
-    throw Exception(message,                                     \
-                    std::source_location::current().file_name(), \
-                    std::source_location::current().line(),      \
-                    std::source_location::current().function_name());
+    constexpr Exception::Exception(const char *message) noexcept
+        : message(message){};
 
-// 记录函数传递信息
-#define __LLFRAME_EXCEPTION_UPDATE__(exception)                         \
-    exception.up_info(std::source_location::current().file_name(),      \
-                      std::source_location::current().line(),           \
-                      std::source_location::current().function_name()); \
-    throw exception;
-
-#define __LLFRAME_TRY_CATCH_BEGIN__ \
-    try                             \
+    constexpr Exception::Exception(const char *message,
+                                   const char *file,
+                                   const size_t line,
+                                   const char *func_name) noexcept
+        : message(message)
     {
-#define __LLFRAME_TRY_CATCH_END__                                            \
-    }                                                                        \
-    catch (llframe::Exception e)                                             \
-    {                                                                        \
-        __LLFRAME_EXCEPTION_UPDATE__(e)                                      \
-    }                                                                        \
-    catch (...)                                                              \
-    {                                                                        \
-        __LLFRAME_THROW_EXCEPTION__(llframe::Exception, "unknown exception") \
-    }
+        this->up_info(file, line, func_name);
+    };
+
+    constexpr Exception::Exception(const char *file,
+                                   const size_t line,
+                                   const char *func_name) noexcept
+    {
+        this->up_info(file, line, func_name);
+    };
+
+    constexpr std::string Exception::what() const noexcept
+    {
+        return this->message + this->locations;
+    };
+
+    constexpr void Exception::up_info(const char *file, const size_t line,
+                                      const char *func_name) noexcept
+    {
+        this->locations.append("\t");
+        this->locations.append(func_name);
+        this->locations.append(": ");
+        this->locations.append(file);
+        this->locations.append("<");
+        this->locations.append(std::to_string(line));
+        this->locations.append(">\n");
+    };
+
+    class Un_Implement : public Exception
+    {
+    public:
+        using Exception::Exception;
+
+        constexpr std::string what() const noexcept override;
+        // protected:
+    public:
+        // 异常信息
+        const std::string message{"not implement"};
+    };
+
+    constexpr std::string
+    Un_Implement::what() const noexcept
+    {
+        return this->message + this->locations;
+    };
+
+    class Bad_Alloc : public Exception
+    {
+    public:
+        using Exception::Exception;
+
+        constexpr std::string what() const noexcept override;
+        // protected:
+    public:
+        // 异常信息
+        const std::string message{"bad allocate!"};
+    };
+
+    constexpr std::string
+    Bad_Alloc::what() const noexcept
+    {
+        return this->message + this->locations;
+    };
+
+} // llframe
 
 #endif //__LLFRAME_EXCEPTION_HPP__

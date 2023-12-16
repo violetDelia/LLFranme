@@ -25,8 +25,10 @@ module;
 export module llframe.memory.device;
 export namespace llframe::device
 {
-
+        using llframe::device::CPU;
+        using llframe::device::Device;
         using llframe::device::GPU;
-        using llframe::device::Host;
-    
+        using llframe::device::HOST;
+        using llframe::device::is_Device;
+
 }

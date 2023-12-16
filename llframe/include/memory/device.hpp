@@ -23,6 +23,7 @@
 
 #ifndef __LLFRAME_DEVICE_HPP__
 #define __LLFRAME_DEVICE_HPP__
+#include <type_traits>
 #ifdef __LLFRAME_USE_MODULE__
 import llframe.core.base_type;
 #else
@@ -31,32 +32,45 @@ import llframe.core.base_type;
 namespace llframe
 {
 
-    namespace device
+    inline namespace device
     {
-        template <size_t Id = 0>
-        struct Device
+        /**
+         * @brief 记录设备信息
+         *
+         */
+        class Device
         {
+        private:
+            size_t id{};
+
+        public:
             /**
-             * @brief 获取设备的id
-             * 
-             *
-             * @return Id
+             * @brief 
+             * @param id 
              */
-            consteval inline size_t get_id() noexcept
-            {
-                return Id;
-            }
+            constexpr Device(size_t id);
+
+            constexpr Device() = default;
+
+            constexpr Device(const Device &other) = default;
+
+            constexpr Device(Device &&other) = default;
         };
 
-        template <size_t Id>
-        struct Host : Device<Id>
+        class HOST : public Device
         {
         };
 
-        template <size_t Id>
-        struct GPU : Device<Id>
+        class CPU : public Device
         {
         };
+
+        class GPU : public Device
+        {
+        };
+
+        template <typename Ty>
+        concept is_Device = std::is_base_of_v<Device, Ty>;
 
     }
 } // llframe
