@@ -38,39 +38,43 @@ namespace llframe
          * @brief 记录设备信息
          *
          */
-        class Device
+        class _Device
         {
         private:
             size_t id{};
 
         public:
             /**
-             * @brief 
-             * @param id 
+             * @brief
+             * @param id
              */
-            constexpr Device(size_t id);
+            constexpr _Device(size_t id);
 
-            constexpr Device() = default;
+            constexpr _Device() = default;
 
-            constexpr Device(const Device &other) = default;
+            constexpr _Device(const _Device &other) = default;
 
-            constexpr Device(Device &&other) = default;
+            constexpr _Device(_Device &&other) = default;
+
+            _Device &operator=(const _Device &other) = default;
+
+            _Device &operator=(_Device &other) = default;
         };
 
-        class HOST : public Device
+        class HOST : public _Device
         {
         };
 
-        class CPU : public Device
+        class CPU : public _Device
         {
         };
 
-        class GPU : public Device
+        class GPU : public _Device
         {
         };
 
         template <typename Ty>
-        concept is_Device = std::is_base_of_v<Device, Ty>;
+        concept is_Device = std::is_base_of_v<_Device, Ty>;
 
     }
 } // llframe

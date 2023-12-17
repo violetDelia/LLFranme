@@ -24,17 +24,19 @@
  */
 #ifndef __LLFRAME_HPP__
 #define __LLFRAME_HPP__
-#include "config.h"
+#include "core/exception_helper.hpp"
 #ifdef __LLFRAME_USE_MODULE__
 import llframe.core;
 import llframe.memory;
+import llframe.tensor;
 #else
 #include "memory/memory.hpp"
 #include "core/core.hpp"
-#include "core/exception_helper.hpp"
+#include "tensor/tensor.hpp"
 #endif // __LLFRAME_USE_MODULE__
+
 namespace llframe
 {
-    
-}// llframe
+
+} // llframe
 #endif //__LLFRAME_HPP__

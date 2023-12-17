@@ -27,8 +27,8 @@ module;
 export module llframe;
 export import llframe.core;
 export import llframe.memory;
+export import llframe.tensor;
 export namespace llframe
 {
 
-    int test() { return 1; };
 }

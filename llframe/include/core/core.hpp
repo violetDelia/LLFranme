@@ -28,9 +28,11 @@
 #ifdef __LLFRAME_USE_MODULE__
 import llframe.core.base_type;
 import llframe.core.exception;
+import llframe.core.conceptions;
 #else
 #include "core/base_type.hpp"
 #include "core/exception.hpp"
+#include "core/conceptions.hpp"
 #endif // __LLFRAME_USE_MODULE__
 namespace llframe
 {

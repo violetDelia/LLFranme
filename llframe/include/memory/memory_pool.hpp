@@ -13,24 +13,26 @@
 //    limitations under the License.
 
 /**
- * @file tensor.hpp
- * @brief 张量
+ * @file allocator.hpp
+ * @brief 基础内存分配器
  * @details
  * @author 时光丶人爱
- * @date 2023-12-9
- * @see If you have any questions about the code or if you think there is a better way to implement
- * it,please contact me by email 1152488956@qq.com.
+ * @date 2023-12-8
  * @copyright Apache 2.0
  */
-#ifndef __LLFRAME_TENSOR_HPP__
-#define __LLFRAME_TENSOR_HPP__
+
+#ifndef __LLFRAME_MEMORY_POOL_HPP__
+#define __LLFRAME_MEMORY_POOL_HPP__
+#include "core/exception_helper.hpp"
+#include <unordered_map>
 #ifdef __LLFRAME_USE_MODULE__
-import llframe.size;
+
 #else
-#include "tensor/size.hpp"
+
 #endif // __LLFRAME_USE_MODULE__
 namespace llframe
 {
     
-}// llframe
-#endif //__LLFRAME_TENSOR_HPP__
+} // llframe
+
+#endif //__LLFRAME_MEMORY_POOL_HPP__

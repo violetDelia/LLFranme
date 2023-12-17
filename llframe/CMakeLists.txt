@@ -58,7 +58,7 @@ target_include_directories(LLFrame
 )
 
 target_link_libraries(LLFrame
-    PUBLIC LLFrame_core LLFrame_memory
+    PUBLIC LLFrame_core LLFrame_memory LLFrame_tensor
 )
 
 
@@ -76,7 +76,7 @@ endif(LLFRAME_TEST)
 include(CMakePackageConfigHelpers)
 install(DIRECTORY "${LLFRAME_INCLUDE_DIR}/" DESTINATION "${LLFRAME_INSTALL_INCLUDE_DIR}")
 install(DIRECTORY "${LLFRAME_MODULE_DIR}/" DESTINATION "${LLFRAME_INSTALL_MODULE_DIR}" FILES_MATCHING PATTERN "*.ixx")
-install(TARGETS LLFrame LLFrame_core LLFrame_memory
+install(TARGETS LLFrame LLFrame_core LLFrame_memory LLFrame_tensor
     EXPORT LLFrameTargets
     RUNTIME DESTINATION ${LLFRAME_INSTALL_RUNTIME_DIR}
     LIBRARY DESTINATION ${LLFRAME_INSTALL_LIB_DIR}

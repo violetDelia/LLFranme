@@ -13,8 +13,8 @@
 //    limitations under the License.
 
 /**
- * @file tensor.hpp
- * @brief 张量
+ * @file size.ixx
+ * @brief 形状
  * @details
  * @author 时光丶人爱
  * @date 2023-12-9
@@ -22,15 +22,13 @@
  * it,please contact me by email 1152488956@qq.com.
  * @copyright Apache 2.0
  */
-#ifndef __LLFRAME_TENSOR_HPP__
-#define __LLFRAME_TENSOR_HPP__
-#ifdef __LLFRAME_USE_MODULE__
-import llframe.size;
-#else
+module;
 #include "tensor/size.hpp"
-#endif // __LLFRAME_USE_MODULE__
-namespace llframe
+export module llframe.size;
+export namespace llframe
 {
-    
-}// llframe
-#endif //__LLFRAME_TENSOR_HPP__
+        using llframe::Size;
+        using llframe::make_size;
+        
+
+}

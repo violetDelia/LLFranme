@@ -33,5 +33,9 @@
 #ifdef TEST_MEMORY
 #define TEST_ALLOCATOR
 #endif // TEST_MEMORY
+#define TEST_TENSOR
+#ifdef TEST_TENSOR
+#define TEST_SIZE
+#endif // TEST_TENSOR
 
 #endif //__LLFRAME_TEST_CONFIG_HPP__

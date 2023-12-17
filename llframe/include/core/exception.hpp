@@ -145,10 +145,9 @@ namespace llframe
         using Exception::Exception;
 
         constexpr std::string what() const noexcept override;
-        // protected:
     public:
         // 异常信息
-        const std::string message{"not implement"};
+        const std::string message{"not implement!"};
     };
 
     constexpr std::string
@@ -163,7 +162,6 @@ namespace llframe
         using Exception::Exception;
 
         constexpr std::string what() const noexcept override;
-        // protected:
     public:
         // 异常信息
         const std::string message{"bad allocate!"};
@@ -171,6 +169,23 @@ namespace llframe
 
     constexpr std::string
     Bad_Alloc::what() const noexcept
+    {
+        return this->message + this->locations;
+    };
+
+    class Out_Range : public Exception
+    {
+    public:
+        using Exception::Exception;
+
+        constexpr std::string what() const noexcept override;
+    public:
+        // 异常信息
+        const std::string message{"out of range!"};
+    };
+
+    constexpr std::string
+    Out_Range::what() const noexcept
     {
         return this->message + this->locations;
     };

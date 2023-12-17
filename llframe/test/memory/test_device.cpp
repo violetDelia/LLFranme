@@ -5,7 +5,7 @@
 import llframe.memory.device;
 #else
 #include "memory/device.hpp"
-TEST(device.construct)
+
 
 #endif // __LLFRAME_USE_MODULE__
 #endif // TEST_DEVICE

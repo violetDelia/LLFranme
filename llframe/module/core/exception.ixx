@@ -28,4 +28,6 @@ export namespace llframe
 {
     using llframe::Exception;
     using llframe::Un_Implement;
+    using llframe::Bad_Alloc;
+    using llframe::Out_Range;
 }

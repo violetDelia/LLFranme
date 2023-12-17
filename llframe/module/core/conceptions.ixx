@@ -13,24 +13,18 @@
 //    limitations under the License.
 
 /**
- * @file tensor.hpp
- * @brief 张量
+ * @file conceptions.ipp
+ * @brief 基础概念
  * @details
  * @author 时光丶人爱
- * @date 2023-12-9
- * @see If you have any questions about the code or if you think there is a better way to implement
- * it,please contact me by email 1152488956@qq.com.
+ * @date 2023-12-17
  * @copyright Apache 2.0
  */
-#ifndef __LLFRAME_TENSOR_HPP__
-#define __LLFRAME_TENSOR_HPP__
-#ifdef __LLFRAME_USE_MODULE__
-import llframe.size;
-#else
-#include "tensor/size.hpp"
-#endif // __LLFRAME_USE_MODULE__
-namespace llframe
+
+module;
+#include "core/conceptions.hpp"
+export module llframe.core.conceptions;
+export namespace llframe
 {
-    
-}// llframe
-#endif //__LLFRAME_TENSOR_HPP__
+    using llframe::is_Integral;
+} // llframe

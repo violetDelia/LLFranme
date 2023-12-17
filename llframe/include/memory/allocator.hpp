@@ -33,7 +33,7 @@ import llframe.core.base_type;
 #include "core/base_type.hpp"
 #endif // __LLFRAME_USE_MODULE__
 #include <memory>
-
+// _Allocator_Base
 namespace llframe
 {
 
@@ -116,9 +116,10 @@ namespace llframe
     };
 }; // llframe
 
+// Allocator
 namespace llframe
 {
-    template <typename Ty, device::is_Device Device>
+    template <typename Ty, device::is_Device Device = HOST>
     class Allocator : public _Allocator_Base<Ty>
     {
     private:
@@ -135,6 +136,7 @@ namespace llframe
 
 }; // llframe
 
+// Allocator<Ty, HOST>
 namespace llframe
 {
 
@@ -147,7 +149,7 @@ namespace llframe
     public:
         using value_type = base_class::value_type;
         using value_pointer = base_class::value_pointer;
-        using device_type = Device;
+        using device_type = HOST;
         using size_type = base_class::size_type;
         using difference_type = base_class::difference_type;
         using propagate_on_container_move_assignment = base_class::propagate_on_container_move_assignment;
@@ -185,11 +187,12 @@ namespace llframe
     template <typename Ty>
     inline constexpr void Allocator<Ty, HOST>::deallocate(Allocator<Ty, HOST>::value_pointer p, Allocator<Ty, HOST>::size_type n)
     {
-        ::operator delete(ptr, n);
+        ::operator delete(p, n);
     }
 
 }; // llframe
 
+// Allocator<Ty, CPU>
 namespace llframe
 {
     template <typename Ty>
@@ -201,13 +204,15 @@ namespace llframe
     public:
         using value_type = base_class::value_type;
         using value_pointer = base_class::value_pointer;
-        using device_type = Device;
+        using device_type = CPU;
         using size_type = base_class::size_type;
         using difference_type = base_class::difference_type;
         using propagate_on_container_move_assignment = base_class::propagate_on_container_move_assignment;
     };
 
 } // llframe
+
+// Allocator<Ty, GPU>
 namespace llframe
 {
     template <typename Ty>
@@ -219,7 +224,7 @@ namespace llframe
     public:
         using value_type = base_class::value_type;
         using value_pointer = base_class::value_pointer;
-        using device_type = Device;
+        using device_type = GPU;
         using size_type = base_class::size_type;
         using difference_type = base_class::difference_type;
         using propagate_on_container_move_assignment = base_class::propagate_on_container_move_assignment;

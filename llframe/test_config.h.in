@@ -33,5 +33,9 @@
 #ifdef TEST_MEMORY
 #cmakedefine TEST_ALLOCATOR
 #endif // TEST_MEMORY
+#cmakedefine TEST_TENSOR
+#ifdef TEST_TENSOR
+#cmakedefine TEST_SIZE
+#endif // TEST_TENSOR
 
 #endif //__LLFRAME_TEST_CONFIG_HPP__
