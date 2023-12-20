@@ -73,7 +73,7 @@ namespace llframe
         {
         };
 
-        template <typename Ty>
+        template <class Ty>
         concept is_Device = std::is_base_of_v<_Device, Ty>;
 
     }

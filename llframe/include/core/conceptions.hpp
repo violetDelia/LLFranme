@@ -25,9 +25,21 @@
 #include <type_traits>
 namespace llframe
 {
-    template <typename Ty>
+    template <class Ty>
     concept is_Integral = std::is_integral_v<Ty>;
 
+    template <class _Ty, template <class...> class _Ty_Base>
+    struct _Is_Instance : public std::false_type
+    {
+    };
+
+    template <template <class...> class _Ty_Base, class... _Args>
+    struct _Is_Instance<_Ty_Base<_Args...>, _Ty_Base> : public std::true_type
+    {
+    };
+
+    template <class Ty, template <class...> class Ty_Base>
+    constexpr inline bool is_instance = _Is_Instance<std::remove_cv_t<std::remove_reference_t<Ty>>, Ty_Base>::value;
 } // llframe
 
 #endif //__LLFRAME_CONCEPTIONS_HPP__

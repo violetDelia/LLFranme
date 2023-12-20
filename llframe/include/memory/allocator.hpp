@@ -44,7 +44,7 @@ namespace llframe
      * @tparam Ty 分配对象的类型
      * @tparam Device 设备类型
      */
-    template <typename Ty>
+    template <class Ty>
     class _Allocator_Base
     {
     public:
@@ -82,7 +82,7 @@ namespace llframe
         static constexpr size_type _get_size(const size_type n);
     };
 
-    template <typename Ty>
+    template <class Ty>
     constexpr _Allocator_Base<Ty>::value_pointer
     _Allocator_Base<Ty>::allocate(
         _Allocator_Base<Ty>::size_type n)
@@ -90,7 +90,7 @@ namespace llframe
         __LLFRAME_THROW_EXCEPTION__(Un_Implement);
     };
 
-    template <typename Ty>
+    template <class Ty>
     constexpr void _Allocator_Base<Ty>::deallocate(
         Ty *p,
         llframe::size_t n) noexcept
@@ -98,7 +98,7 @@ namespace llframe
         __LLFRAME_THROW_EXCEPTION__(Un_Implement);
     };
 
-    template <typename Ty>
+    template <class Ty>
     template <_Allocator_Base<Ty>::size_type _Ty_Size>
     constexpr _Allocator_Base<Ty>::size_type
     _Allocator_Base<Ty>::_get_size(const _Allocator_Base<Ty>::size_type n)
@@ -119,7 +119,7 @@ namespace llframe
 // Allocator
 namespace llframe
 {
-    template <typename Ty, device::is_Device Device = HOST>
+    template <class Ty, device::is_Device Device = HOST>
     class Allocator : public _Allocator_Base<Ty>
     {
     private:
@@ -140,7 +140,7 @@ namespace llframe
 namespace llframe
 {
 
-    template <typename Ty>
+    template <class Ty>
     class Allocator<Ty, HOST> : public _Allocator_Base<Ty>
     {
     private:
@@ -173,7 +173,7 @@ namespace llframe
         static inline constexpr void deallocate(value_pointer p, size_type n);
     };
 
-    template <typename Ty>
+    template <class Ty>
     constexpr Allocator<Ty, HOST>::value_pointer
     Allocator<Ty, HOST>::allocate(Allocator<Ty, HOST>::size_type n)
     {
@@ -184,7 +184,7 @@ namespace llframe
         return allocate_size == 0 ? nullptr : static_cast<Ty *>(::operator new(allocate_size));
     }
 
-    template <typename Ty>
+    template <class Ty>
     inline constexpr void Allocator<Ty, HOST>::deallocate(Allocator<Ty, HOST>::value_pointer p, Allocator<Ty, HOST>::size_type n)
     {
         ::operator delete(p, n);
@@ -195,7 +195,7 @@ namespace llframe
 // Allocator<Ty, CPU>
 namespace llframe
 {
-    template <typename Ty>
+    template <class Ty>
     class Allocator<Ty, CPU> : public _Allocator_Base<Ty>
     {
     private:
@@ -215,7 +215,7 @@ namespace llframe
 // Allocator<Ty, GPU>
 namespace llframe
 {
-    template <typename Ty>
+    template <class Ty>
     class Allocator<Ty, GPU> : public _Allocator_Base<Ty>
     {
     private:

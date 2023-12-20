@@ -56,4 +56,21 @@ TEST(size, assignment)
     ASSERT_EQ(c.at(3), 3);
     ASSERT_EQ(c.dims(), 4);
 }
+TEST(size, operator_equal){
+    auto a = llframe::make_size();
+    auto b = llframe::make_size();
+    ASSERT_EQ(a == b,true);
+    ASSERT_EQ(a != b,false);
+    auto c = llframe::make_size(0,1,2,3);
+    ASSERT_EQ(a == c,false);
+    ASSERT_EQ(a != c,true);
+    auto d = llframe::make_size(0,int(1),long(2),size_t(3));
+    ASSERT_EQ(c == d,true);
+    ASSERT_EQ(d != d,false);
+    auto e = llframe::make_size(0,int(1),long(2));
+    ASSERT_EQ(d == e,false);
+    ASSERT_EQ(e == d,false);
+
+
+}
 #endif // TEST_SIZE

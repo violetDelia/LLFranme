@@ -28,6 +28,8 @@ export module llframe.size;
 export namespace llframe
 {
         using llframe::Size;
+        using llframe::is_Size;
+        using llframe::_Size_Comparator;
         using llframe::make_size;
         
 

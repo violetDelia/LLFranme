@@ -31,7 +31,7 @@
 #endif // TEST_CORE
 #define TEST_MEMORY
 #ifdef TEST_MEMORY
-#define TEST_ALLOCATOR
+/* #undef TEST_ALLOCATOR */
 #endif // TEST_MEMORY
 #define TEST_TENSOR
 #ifdef TEST_TENSOR

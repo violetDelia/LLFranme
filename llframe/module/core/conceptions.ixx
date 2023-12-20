@@ -26,5 +26,6 @@ module;
 export module llframe.core.conceptions;
 export namespace llframe
 {
+    using llframe::is_instance;
     using llframe::is_Integral;
 } // llframe
