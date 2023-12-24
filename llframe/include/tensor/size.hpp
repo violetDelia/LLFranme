@@ -22,30 +22,30 @@
  * it,please contact me by email 1152488956@qq.com.
  * @copyright Apache 2.0
  */
+
 #ifndef __LLFRAME_SIZE_HPP__
 #define __LLFRAME_SIZE_HPP__
-#include <tuple>
-#include <optional>
 #include <type_traits>
 #include "core/exception_helper.hpp"
 #ifdef __LLFRAME_USE_MODULE__
-import llframe.core.conceptions;
+import llframe.core.base_type;
+import llframe.memory.allocator;
+import llframe.size.size_iterator;
+import llframe.core.helper;
 #else
-#include "core/conceptions.hpp"
+#include
+#include "core/base_type.hpp"
+#include "memory/allocator.hpp"
+#include "tensor/size_iterator.hpp"
+#include "core/helper.hpp"
 #endif // __LLFRAME_USE_MODULE__
-// define conceptions
-
-namespace llframe
-{
-    template <is_Integral... Integrals>
-    class Size;
-    template <class Ty>
-    concept is_Size = is_instance<Ty, Size>;
-} // llframe
 
 // define make_size
 namespace llframe
 {
+    template <size_t Dims>
+    class Size;
+
     /**
      * @brief 构造size
      *
@@ -54,44 +54,60 @@ namespace llframe
      * @return Size<is_Integral... Integrals>
      */
     template <is_Integral... Integrals>
-    inline consteval auto make_size(Integrals... value);
-} // llframe
+    [[nodiscard]] inline constexpr auto make_size(Integrals... value) noexcept;
+
+    template <size_t Dims>
+    [[nodiscard]] inline constexpr auto make_size(Size<Dims> &size) noexcept;
+
+}
 // define Size
 namespace llframe
 {
-
     /**
      * @brief 尺寸
-     *
+     * std::array不安全,move不能清理原有的内存,data()返回不定义;
+     * 所以删掉move,隐藏构造, 访问index不能是const的
+     * ,有必要重新写一个array
      * @tparam Ty 整数
      */
-    template <is_Integral... Integrals>
+    template <size_t Dims>
     class Size
     {
-        friend consteval auto llframe::make_size(Integrals... value);
-        template <is_Integral... Other_Integrals>
-        friend class Size;
-        template <is_Size _Left_Size, is_Size _Right_Size, int _Index>
-        friend class _Size_Comparator;
+        template <is_Integral... Integrals>
+        friend constexpr auto make_size(Integrals... value) noexcept;
+        friend constexpr auto make_size(Size &size) noexcept;
 
     public:
         using size_type = size_t;
+        using value_type = size_t;
+        using reference = size_t &;
+        using pointer = size_t *;
+        using difference_type = ptrdiff_t;
+        using iterator_category = std::random_access_iterator_tag;
+
+    private:
+        using Self = Size<Dims>;
+        using allocator = Allocator<value_type, HOST>;
 
     protected:
-        using tuple = std::tuple<Integrals...>;
-        tuple data;
+        pointer data;
+        static const constinit size_t Dims = Dims;
 
     public:
         constexpr Size(const Size &other) noexcept = default;
-        constexpr Size(Size &&other) noexcept = delete;
+        constexpr Size(Size &&other) noexcept : data(std::move(other.data)){};
         constexpr Size &operator=(const Size &other) noexcept = default;
-        constexpr Size &operator=(Size &&other) noexcept = delete;
+        constexpr Size &operator=(Size &&other) noexcept = default;
+        constexpr ~Size() = default;
 
-        template <is_Integral... Other_Integrals>
-        constexpr bool operator==(const Size<Other_Integrals...> &other) const noexcept;
+    public:
+        template <size_t Other_Dims>
+        [[nodiscard]] constexpr bool
+        operator==(Size<Other_Dims> &other) const noexcept;
 
-        template <is_Integral... Other_Integrals>
-        constexpr bool operator!=(const Size<Other_Integrals...> &other) const noexcept;
+        template <size_t Other_Dims>
+        [[nodiscard]] constexpr bool
+        operator!=(Size<Other_Dims> &other) const noexcept;
 
         /**
          * @brief 维度个数
@@ -99,170 +115,111 @@ namespace llframe
          *
          * @return size_type
          */
-        constexpr inline size_type dims() const noexcept;
+        [[nodiscard]] consteval size_t dims() const noexcept;
 
-        template <is_Integral Index>
-        constexpr size_type operator[](Index index) const;
+        [[nodiscard]] constexpr reference operator[](size_type index);
 
         /**
-         * @brief 索引处的维度长度
+         * @brief 索引处的维度长度  动态的get
          *
          * @tparam Index 整数
          * @param index 索引
          * @return  size_type
          */
-        template <is_Integral Index>
-        constexpr size_type at(Index index) const;
+        [[nodiscard]] constexpr value_type at(size_type index) const;
 
     protected:
-        template <is_Integral Index>
-        constexpr std::optional<size_t> at_(Index index) const noexcept;
+        template <is_Integral... Integrals>
         constexpr Size(Integrals... values) noexcept;
     };
+}
 
-} // llframe
-// define _Size_Comparator
-namespace llframe
-{
-    // 两个Size比较
-    template <is_Size _Left_Size, is_Size _Right_Size, int _Index>
-    class _Size_Comparator
-    {
-        template <is_Integral... Integrals>
-        friend class Size;
-        template <is_Size _Left_Size, is_Size _Right_Size, int _Index>
-        friend class _Size_Comparator;
-
-    private:
-        static constexpr bool equle(const _Left_Size &_left_size, const _Right_Size &_right_size);
-    };
-
-    template <is_Size _Left_Size, is_Size _Right_Size>
-    class _Size_Comparator<_Left_Size, _Right_Size, -1>
-    {
-        template <is_Integral... Integrals>
-        friend class Size;
-        template <is_Size _Left_Size, is_Size _Right_Size, int _Index>
-        friend class _Size_Comparator;
-
-    private:
-        static constexpr bool equle(const _Left_Size &_left_size, const _Right_Size &_right_size);
-    };
-} // llframe
-// define others
+// define other
 namespace llframe
 {
 
 }
-// implement make_size
-namespace llframe
-{
-    template <is_Integral... Integrals>
-    inline consteval auto make_size(Integrals... value)
-    {
-        return Size<Integrals...>(value...);
-    };
-} // llframe
-// implement Size
+// impletment make_size
 namespace llframe
 {
 
     template <is_Integral... Integrals>
-    constexpr Size<Integrals...>::Size(Integrals... values) noexcept : data{values...} {};
-
-    template <is_Integral... Integrals>
-    constexpr inline Size<Integrals...>::size_type
-    Size<Integrals...>::dims() const noexcept
+    inline constexpr auto make_size(Integrals... value) noexcept
     {
-        return std::tuple_size_v<decltype(data)>;
+        return Size<sizeof...(Integrals)>(value...);
     };
 
-    template <is_Integral... Integrals>
-    template <is_Integral Index>
-    constexpr std::optional<size_t>
-    Size<Integrals...>::at_(Index index) const noexcept
+    template <size_t Dims>
+    inline constexpr auto make_size(Size<Dims> &size) noexcept
     {
-        auto find_index_to_ass = [&]<size_t I>(std::in_place_index_t<I>, size_t index, size_t &res)
-        {
-            if (I == index)
-            {
-                res = std::get<I>(data);
-                return true;
-            }
-            return false;
-        };
-        return [&]<size_t... Tuple_Len>(std::index_sequence<Tuple_Len...> is) -> std::optional<size_t>
-        {
-            size_type res{};
-            if ((find_index_to_ass(std::in_place_index<Tuple_Len>, index, res) || ...))
-            {
-                return res;
-            }
-            return std::nullopt;
-        }(std::index_sequence_for<Integrals...>{});
+
+        return Size<Dims>(std::move(size));
     }
+}
 
+// impletment make_size
+namespace llframe
+{
+
+    template <size_t Dims>
     template <is_Integral... Integrals>
-    template <is_Integral Index>
-    constexpr Size<Integrals...>::size_type
-    Size<Integrals...>::at(Index index) const
+    constexpr Size<Dims>::Size(Integrals... values) noexcept
+        : data({static_cast<size_t>(values)...}){
+              // static_cast(sizeof...(values) == Dims);
+          };
+
+    template <size_t Dims>
+    consteval inline size_t Size<Dims>::dims() const noexcept
     {
-        if (static_cast<size_type>(index) > dims())
+        return Self::Dims;
+    };
+
+    template <size_t Dims>
+    constexpr Size<Dims>::value_type Size<Dims>::at(size_type index) const
+    {
+        if (static_cast<size_type>(index) >= Dims)
             __LLFRAME_THROW_EXCEPTION__(Out_Range);
-        std::optional<size_t> dim_len = at_(index);
-        if (!dim_len.has_value())
-            __LLFRAME_THROW_EXCEPTION__(Exception)
-        return at_(index).value();
+        if (static_cast<size_type>(data.size()) != Dims)
+            __LLFRAME_THROW_EXCEPTION_INFO__(Exception, "size is null");
+        return data[index];
     }
 
-    template <is_Integral... Integrals>
-    template <is_Integral Index>
-    constexpr Size<Integrals...>::size_type
-    Size<Integrals...>::operator[](Index index) const
+    template <size_t Dims>
+    constexpr Size<Dims>::reference Size<Dims>::operator[](size_type index)
     {
-        return at(index);
+        if (static_cast<size_type>(index) >= Dims)
+            __LLFRAME_THROW_EXCEPTION__(Out_Range);
+        return data[index];
     }
 
-    template <is_Integral... Integrals>
-    template <is_Integral... Other_Integrals>
-    constexpr bool
-    Size<Integrals...>::operator==(const Size<Other_Integrals...> &other) const noexcept
+    template <size_t Dims>
+    template <size_t Other_Dims>
+    constexpr bool Size<Dims>::operator==(Size<Other_Dims> &other) const noexcept
     {
-        const auto this_dims = dims();
-        const auto other_dims = other.dims();
-        if (this_dims != other_dims)
+        if constexpr (Dims != Other_Dims)
             return false;
-        if (this_dims == 0)
-            return true;
-        return _Size_Comparator<decltype(*this), decltype(other), sizeof...(Integrals) - 1>::equle(*this, other);
-    }
-
-    template <is_Integral... Integrals>
-    template <is_Integral... Other_Integrals>
-    constexpr bool
-    Size<Integrals...>::operator!=(const Size<Other_Integrals...> &other) const noexcept
-    {
-        return !this->operator==(other);
-    }
-} // llframe
-// implement _Size_Comparator
-namespace llframe
-{
-    template <is_Size _Left_Size, is_Size _Right_Size, int _Index>
-    constexpr bool llframe::_Size_Comparator<_Left_Size, _Right_Size, _Index>::equle(const _Left_Size &_left_size, const _Right_Size &_right_size)
-    {
-        if (_left_size.at(_Index) != _right_size.at(_Index))
-            return false;
-        return _Size_Comparator<_Left_Size, _Right_Size, _Index - 1>::equle(_left_size, _right_size);
-    }
-
-    template <is_Size _Left_Size, is_Size _Right_Size>
-    constexpr bool llframe::_Size_Comparator<_Left_Size, _Right_Size, -1>::equle(const _Left_Size &_left_size, const _Right_Size &_right_size)
-    {
-        // if (_left_size[0] != _right_size[0])
-        //     return false;
+        for (int i{}; i < Dims; i++)
+        {
+            if (at(i) != other.at(i))
+                return false;
+        }
         return true;
     }
-} // llframe
+
+    template <size_t Dims>
+    template <size_t Other_Dims>
+    constexpr bool Size<Dims>::operator!=(Size<Other_Dims> &other) const noexcept
+    {
+        if constexpr (Dims != Other_Dims)
+            return true;
+        for (int i{}; i < Dims; i++)
+        {
+            if (at(i) != other.at(i))
+                return true;
+        }
+        return false;
+    }
+
+}
 
 #endif //__LLFRAME_SIZE_HPP__

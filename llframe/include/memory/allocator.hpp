@@ -84,16 +84,14 @@ namespace llframe
 
     template <class Ty>
     constexpr _Allocator_Base<Ty>::value_pointer
-    _Allocator_Base<Ty>::allocate(
-        _Allocator_Base<Ty>::size_type n)
+    _Allocator_Base<Ty>::allocate(size_type n)
     {
         __LLFRAME_THROW_EXCEPTION__(Un_Implement);
     };
 
     template <class Ty>
-    constexpr void _Allocator_Base<Ty>::deallocate(
-        Ty *p,
-        llframe::size_t n) noexcept
+    constexpr void
+    _Allocator_Base<Ty>::deallocate(Ty *p, size_type n) noexcept
     {
         __LLFRAME_THROW_EXCEPTION__(Un_Implement);
     };
@@ -101,7 +99,7 @@ namespace llframe
     template <class Ty>
     template <_Allocator_Base<Ty>::size_type _Ty_Size>
     constexpr _Allocator_Base<Ty>::size_type
-    _Allocator_Base<Ty>::_get_size(const _Allocator_Base<Ty>::size_type n)
+    _Allocator_Base<Ty>::_get_size(const size_type n)
     {
         constexpr bool _overflow_posibility = _Ty_Size > 1;
         if constexpr (_overflow_posibility)
@@ -131,7 +129,8 @@ namespace llframe
         using device_type = Device;
         using size_type = base_class::size_type;
         using difference_type = base_class::difference_type;
-        using propagate_on_container_move_assignment = base_class::propagate_on_container_move_assignment;
+        using propagate_on_container_move_assignment =
+            base_class::propagate_on_container_move_assignment;
     };
 
 }; // llframe
@@ -152,7 +151,8 @@ namespace llframe
         using device_type = HOST;
         using size_type = base_class::size_type;
         using difference_type = base_class::difference_type;
-        using propagate_on_container_move_assignment = base_class::propagate_on_container_move_assignment;
+        using propagate_on_container_move_assignment =
+            base_class::propagate_on_container_move_assignment;
 
     public:
         /**
@@ -175,7 +175,7 @@ namespace llframe
 
     template <class Ty>
     constexpr Allocator<Ty, HOST>::value_pointer
-    Allocator<Ty, HOST>::allocate(Allocator<Ty, HOST>::size_type n)
+    Allocator<Ty, HOST>::allocate(size_type n)
     {
         size_type allocate_size{};
         __LLFRAME_TRY_CATCH_BEGIN__
@@ -185,7 +185,8 @@ namespace llframe
     }
 
     template <class Ty>
-    inline constexpr void Allocator<Ty, HOST>::deallocate(Allocator<Ty, HOST>::value_pointer p, Allocator<Ty, HOST>::size_type n)
+    inline constexpr void
+    Allocator<Ty, HOST>::deallocate(value_pointer p, size_type n)
     {
         ::operator delete(p, n);
     }
@@ -207,7 +208,8 @@ namespace llframe
         using device_type = CPU;
         using size_type = base_class::size_type;
         using difference_type = base_class::difference_type;
-        using propagate_on_container_move_assignment = base_class::propagate_on_container_move_assignment;
+        using propagate_on_container_move_assignment =
+            base_class::propagate_on_container_move_assignment;
     };
 
 } // llframe
@@ -227,7 +229,8 @@ namespace llframe
         using device_type = GPU;
         using size_type = base_class::size_type;
         using difference_type = base_class::difference_type;
-        using propagate_on_container_move_assignment = base_class::propagate_on_container_move_assignment;
+        using propagate_on_container_move_assignment =
+            base_class::propagate_on_container_move_assignment;
     };
 
 } // llframe

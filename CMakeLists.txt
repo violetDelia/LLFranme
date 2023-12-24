@@ -15,15 +15,12 @@ if(DEFINED TEST_ALL)
     unset(TEST_ALL CACHE)
 endif()
 
-
-
 # #---------- build options ----------# #
 option(OUT_COMPILER_INFO "out compiler information" OFF)
 option(COMPILER_TEST "Test if the compilation is working" OFF)
 option(BUILD_SHARED_LIBS "Build using shared libraries" OFF)
 option(USE_MODULE "module support" ON)
 option(TEST_ALL "test" ON)
-
 
 if(USE_MODULE)
     add_compile_definitions(__LLFRAME_USE_MODULE__)
@@ -83,5 +80,4 @@ target_include_directories(main
     $<BUILD_INTERFACE:${LLFRAME_INCLUDE_DIR}>
     $<INSTALL_INTERFACE:${LLFRAME_INCLUDE_DIR}>
 )
-target_link_libraries(main PRIVATE LLFrame )
-
+target_link_libraries(main PRIVATE LLFrame)

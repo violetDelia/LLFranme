@@ -25,8 +25,15 @@
 #include <type_traits>
 namespace llframe
 {
+    // 是整形
     template <class Ty>
     concept is_Integral = std::is_integral_v<Ty>;
+
+    template <class TT, class UT>
+    consteval auto consteval_min(const TT &lfte_value, const UT &right_value) noexcept
+    {
+        return (lfte_value < right_value) ? lfte_value : right_value;
+    }
 
     template <class _Ty, template <class...> class _Ty_Base>
     struct _Is_Instance : public std::false_type
@@ -37,9 +44,16 @@ namespace llframe
     struct _Is_Instance<_Ty_Base<_Args...>, _Ty_Base> : public std::true_type
     {
     };
-
+    
+    /**
+     * @brief 是否是模板类的一个实例
+     * 
+     * @tparam Ty 模板类实例
+     * @tparam Ty_Base 模板基类
+     */
     template <class Ty, template <class...> class Ty_Base>
     constexpr inline bool is_instance = _Is_Instance<std::remove_cv_t<std::remove_reference_t<Ty>>, Ty_Base>::value;
+
 } // llframe
 
 #endif //__LLFRAME_CONCEPTIONS_HPP__

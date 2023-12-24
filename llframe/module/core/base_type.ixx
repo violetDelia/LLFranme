@@ -25,7 +25,7 @@ module;
 export module llframe.core.base_type;
 export namespace llframe
 {
-    using llframe::float32_t;
+    using llframe:: float32_t;
     using llframe::float64_t;
     using llframe::int16_t;
     using llframe::int32_t;

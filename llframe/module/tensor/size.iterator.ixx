@@ -13,19 +13,22 @@
 //    limitations under the License.
 
 /**
- * @file conceptions.ipp
- * @brief 基础概念
+ * @file size_iterator.ixx
+ * @brief size的迭代器
  * @details
  * @author 时光丶人爱
- * @date 2023-12-17
+ * @date 2023-12-23
+ * @see If you have any questions about the code or if you think there is a better way to implement
+ * it,please contact me by email 1152488956@qq.com.
  * @copyright Apache 2.0
  */
-
 module;
-#include "core/conceptions.hpp"
-export module llframe.core.conceptions;
+#include "tensor/size_iterator.hpp"
+export module llframe.size.size_iterator;
 export namespace llframe
 {
-    using llframe::is_instance;
-    using llframe::is_Integral;
-} // llframe
+    using llframe::Const_Size_Iterator;
+    using llframe::Size_Iterator;
+    using llframe::is_Size;
+
+}

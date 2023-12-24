@@ -13,22 +13,25 @@
 //    limitations under the License.
 
 /**
- * @file size.ixx
- * @brief 形状
+ * @file iterator.ixx
+ * @brief 迭代器接口
  * @details
  * @author 时光丶人爱
- * @date 2023-12-9
+ * @date 2023-12-23
  * @see If you have any questions about the code or if you think there is a better way to implement
  * it,please contact me by email 1152488956@qq.com.
  * @copyright Apache 2.0
  */
+
 module;
-#include "tensor/size.hpp"
-export module llframe.size;
-export import llframe.size.size_iterator;
+#include "core/iterator.hpp"
+export module llframe.core.iterator;
 export namespace llframe
 {
-        using llframe::make_size;
-        using llframe::Size;
-
-}
+    using llframe::Bidirectional_Iterator;
+    using llframe::Const_Bidirectional_Iterator;
+    using llframe::Const_Forward_Iterator;
+    using llframe::Const_Random_Iterator;
+    using llframe::Forward_Iterator;
+    using llframe::Random_Iterator;
+} // llframe

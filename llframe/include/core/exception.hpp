@@ -62,7 +62,10 @@ namespace llframe
          * @param line 所在源文件行数
          * @param func_name 所在源文件的函数名
          */
-        constexpr Exception(const char *message, const char *file, const size_t line, const char *func_name) noexcept;
+        constexpr Exception(const char *message,
+                            const char *file,
+                            const size_t line,
+                            const char *func_name) noexcept;
 
         /**
          * @brief 构造Exception
@@ -72,7 +75,9 @@ namespace llframe
          * @param line 所在源文件行数
          * @param func_name 所在源文件的函数名
          */
-        constexpr Exception(const char *file, const size_t line, const char *func_name) noexcept;
+        constexpr Exception(const char *file,
+                            const size_t line,
+                            const char *func_name) noexcept;
 
         /**
          * @brief 记录异常的传递信息
@@ -93,7 +98,9 @@ namespace llframe
          * @param line 行数
          * @param func_name 函数名
          */
-        constexpr void up_info(const char *file, const size_t line, const char *func_name) noexcept;
+        constexpr void up_info(const char *file,
+                               const size_t line,
+                               const char *func_name) noexcept;
 
         // protected:
     public:
@@ -127,7 +134,8 @@ namespace llframe
         return this->message + this->locations;
     };
 
-    constexpr void Exception::up_info(const char *file, const size_t line,
+    constexpr void Exception::up_info(const char *file,
+                                      const size_t line,
                                       const char *func_name) noexcept
     {
         this->locations.append("\t");
@@ -145,6 +153,7 @@ namespace llframe
         using Exception::Exception;
 
         constexpr std::string what() const noexcept override;
+
     public:
         // 异常信息
         const std::string message{"not implement!"};
@@ -162,6 +171,7 @@ namespace llframe
         using Exception::Exception;
 
         constexpr std::string what() const noexcept override;
+
     public:
         // 异常信息
         const std::string message{"bad allocate!"};
@@ -179,6 +189,7 @@ namespace llframe
         using Exception::Exception;
 
         constexpr std::string what() const noexcept override;
+
     public:
         // 异常信息
         const std::string message{"out of range!"};

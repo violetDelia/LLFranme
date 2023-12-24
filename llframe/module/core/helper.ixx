@@ -13,22 +13,20 @@
 //    limitations under the License.
 
 /**
- * @file size.ixx
- * @brief 形状
+ * @file conceptions.ipp
+ * @brief 基础概念
  * @details
  * @author 时光丶人爱
- * @date 2023-12-9
- * @see If you have any questions about the code or if you think there is a better way to implement
- * it,please contact me by email 1152488956@qq.com.
+ * @date 2023-12-17
  * @copyright Apache 2.0
  */
+
 module;
-#include "tensor/size.hpp"
-export module llframe.size;
-export import llframe.size.size_iterator;
+#include "core/helper.hpp"
+export module llframe.core.helper;
 export namespace llframe
 {
-        using llframe::make_size;
-        using llframe::Size;
-
-}
+    using llframe::is_instance;
+    using llframe::is_Integral;
+    using llframe::consteval_min;
+} // llframe
