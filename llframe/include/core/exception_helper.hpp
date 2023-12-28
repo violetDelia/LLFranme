@@ -27,50 +27,45 @@
 #include <stdio.h>
 #include "core/exception.hpp"
 
-#define __UN_IMPLEMENTED__                              \
-    printf("Not implemented:\n");                       \
-    printf("\tin file:\t %s\tline:%d\n",                \
-           std::source_location::current().file_name(), \
-           std::source_location::current().line());     \
-    printf("\tfunction name :\t %s\n ",                 \
+#define __UN_IMPLEMENTED__                                                     \
+    printf("Not implemented:\n");                                              \
+    printf("\tin file:\t %s\tline:%d\n",                                       \
+           std::source_location::current().file_name(),                        \
+           std::source_location::current().line());                            \
+    printf("\tfunction name :\t %s\n ",                                        \
            std::source_location::current().function_name());
 
 // 抛出异常
-#define __LLFRAME_THROW_EXCEPTION_INFO__(Exception, message)     \
-    throw Exception(message,                                     \
-                    std::source_location::current().file_name(), \
-                    std::source_location::current().line(),      \
+#define __LLFRAME_THROW_EXCEPTION_INFO__(Exception, message)                   \
+    throw Exception(message, std::source_location::current().file_name(),      \
+                    std::source_location::current().line(),                    \
                     std::source_location::current().function_name());
 // 抛出异常
-#define __LLFRAME_THROW_EXCEPTION__(Exception)       \
-    throw Exception(                                 \
-        std::source_location::current().file_name(), \
-        std::source_location::current().line(),      \
-        std::source_location::current().function_name());
+#define __LLFRAME_THROW_EXCEPTION__(Exception)                                 \
+    throw Exception(std::source_location::current().file_name(),               \
+                    std::source_location::current().line(),                    \
+                    std::source_location::current().function_name());
 // 记录函数传递信息
-#define __LLFRAME_EXCEPTION_UPDATE__(exception)                         \
-    exception.up_info(std::source_location::current().file_name(),      \
-                      std::source_location::current().line(),           \
-                      std::source_location::current().function_name()); \
+#define __LLFRAME_EXCEPTION_UPDATE__(exception)                                \
+    exception.up_info(std::source_location::current().file_name(),             \
+                      std::source_location::current().line(),                  \
+                      std::source_location::current().function_name());        \
     throw exception;
 
-#define __LLFRAME_TRY_CATCH_BEGIN__ \
-    try                             \
-    {
-#define __LLFRAME_TRY_CATCH_END__                                                  \
-    }                                                                              \
-    catch (llframe::Exception e)                                                   \
-    {                                                                              \
-        e.up_info(std::source_location::current().file_name(),                     \
-                  std::source_location::current().line(),                          \
-                  std::source_location::current().function_name());                \
-        throw e;                                                                   \
-    }                                                                              \
-    catch (...)                                                                    \
-    {                                                                              \
-        throw llframe::Exception(std::source_location::current().file_name(),      \
-                                 std::source_location::current().line(),           \
-                                 std::source_location::current().function_name()); \
+#define __LLFRAME_TRY_CATCH_BEGIN__ try {
+#define __LLFRAME_TRY_CATCH_END__                                              \
+    }                                                                          \
+    catch (llframe::Exception e) {                                             \
+        e.up_info(std::source_location::current().file_name(),                 \
+                  std::source_location::current().line(),                      \
+                  std::source_location::current().function_name());            \
+        throw e;                                                               \
+    }                                                                          \
+    catch (...) {                                                              \
+        throw llframe::Exception(                                              \
+            std::source_location::current().file_name(),                       \
+            std::source_location::current().line(),                            \
+            std::source_location::current().function_name());                  \
     }
 
 #endif //__LLFRAME_EXCEPTION_HELPER_HPP__

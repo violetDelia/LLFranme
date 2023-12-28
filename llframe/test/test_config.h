@@ -28,6 +28,7 @@
 #define TEST_CORE
 #ifdef TEST_CORE
 #define TEST_BASE_TYPE
+#define TEST_ITERATOR
 #endif // TEST_CORE
 #define TEST_MEMORY
 #ifdef TEST_MEMORY

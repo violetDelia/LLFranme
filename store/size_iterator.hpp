@@ -40,11 +40,22 @@ namespace llframe
     template <size_t Dims>
     class Size;
 
-    template <class Ty>
-    concept is_Size = is_instance<Ty, Size>;
+    template <class _Ty, template <int> class _Ty_Base>
+    struct _Is_Size : public std::false_type
+    {
+    };
 
+    template <int Dims>
+    struct _Is_Size<Size<Dims>, Size> : public std::true_type
+    {
+    };
+
+    template <class Ty>
+    concept is_Size = _Is_Size<Ty, Size>::value;
+    // template <class Ty>
+    // concept is_Size = is_Size<Ty>;
     template <is_Size Size>
-    class Const_Size_Iterator : public Const_Random_Iterator<Const_Size_Iterator<Size>>
+    class Const_Size_Iterator : public Const_Random_Iterator<Size>
     {
     private:
         using Self = Const_Size_Iterator;
@@ -58,7 +69,7 @@ namespace llframe
         using iterator_category = typename Size::iterator_category;
 
     private:
-        address element;
+        address element{};
 
     public:
         constexpr Const_Size_Iterator() noexcept = default;
@@ -89,7 +100,7 @@ namespace llframe
     };
 
     template <is_Size Size>
-    class Size_Iterator : public Random_Iterator<Const_Size_Iterator<Size>>
+    class Size_Iterator : Const_Size_Iterator<Size>
     {
     private:
         using Self = Size_Iterator;
@@ -100,7 +111,8 @@ namespace llframe
         using value_type = typename Size::value_type;
         using pointer = typename Size::pointer;
         using reference = typename Size::reference;
-        using iterator_category = typename Size::random_access_iterator_tag;
+        using iterator_category = typename Size::iterator_category;
+        ;
 
     public:
         // [[nodiscard]] constexpr reference operator*() const;

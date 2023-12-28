@@ -28,6 +28,7 @@
 #cmakedefine TEST_CORE
 #ifdef TEST_CORE
 #cmakedefine TEST_BASE_TYPE
+#cmakedefine TEST_ITERATOR
 #endif // TEST_CORE
 #cmakedefine TEST_MEMORY
 #ifdef TEST_MEMORY

@@ -44,16 +44,36 @@ namespace llframe
     struct _Is_Instance<_Ty_Base<_Args...>, _Ty_Base> : public std::true_type
     {
     };
-    
+
     /**
      * @brief 是否是模板类的一个实例
-     * 
+     *
      * @tparam Ty 模板类实例
      * @tparam Ty_Base 模板基类
      */
     template <class Ty, template <class...> class Ty_Base>
     constexpr inline bool is_instance = _Is_Instance<std::remove_cv_t<std::remove_reference_t<Ty>>, Ty_Base>::value;
 
+    template <typename _Ty>
+    struct _add_const
+    {
+        using type = const _Ty;
+    };
+
+    template <typename _Ty>
+    struct _add_const<_Ty &>
+    {
+        using type = const std::remove_const_t<_Ty> &;
+    };
+
+    template <typename _Ty>
+    struct _add_const<_Ty *>
+    {
+        using type = const std::remove_const_t<_Ty> *;
+    };
+
+    template <typename Ty>
+    using add_const_t = typename _add_const<Ty>::type;
 } // llframe
 
 #endif //__LLFRAME_CONCEPTIONS_HPP__

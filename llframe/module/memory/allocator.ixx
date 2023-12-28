@@ -24,8 +24,7 @@
 module;
 #include "memory/allocator.hpp"
 export module llframe.memory.allocator;
-export namespace llframe
-{
-    // using llframe::_Allocator_Base;
-    using llframe::Allocator;
-}
+export namespace llframe {
+// using llframe::_Allocator_Base;
+using llframe::Allocator;
+} // namespace llframe

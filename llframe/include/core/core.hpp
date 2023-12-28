@@ -36,8 +36,7 @@ import llframe.core.iterator;
 #include "core/helper.hpp"
 #include "core/iterator.hpp"
 #endif // __LLFRAME_USE_MODULE__
-namespace llframe
-{
+namespace llframe {
 
-} // llframe
+} // namespace llframe
 #endif //__LLFRAME_CORE_HPP__

@@ -18,17 +18,15 @@
  * @details
  * @author 时光丶人爱
  * @date 2023-12-9
- * @see If you have any questions about the code or if you think there is a better way to implement
- * it,please contact me by email 1152488956@qq.com.
+ * @see If you have any questions about the code or if you think there is a
+ * better way to implement it,please contact me by email 1152488956@qq.com.
  * @copyright Apache 2.0
  */
 module;
 #include "tensor/size.hpp"
 export module llframe.size;
-export import llframe.size.size_iterator;
-export namespace llframe
-{
-        using llframe::make_size;
-        using llframe::Size;
+export namespace llframe {
+using llframe::make_size;
+using llframe::Size;
 
-}
+} // namespace llframe

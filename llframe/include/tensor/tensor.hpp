@@ -18,8 +18,8 @@
  * @details
  * @author 时光丶人爱
  * @date 2023-12-9
- * @see If you have any questions about the code or if you think there is a better way to implement
- * it,please contact me by email 1152488956@qq.com.
+ * @see If you have any questions about the code or if you think there is a
+ * better way to implement it,please contact me by email 1152488956@qq.com.
  * @copyright Apache 2.0
  */
 #ifndef __LLFRAME_TENSOR_HPP__
@@ -29,10 +29,7 @@ import llframe.size;
 #else
 #include "tensor/size.hpp"
 #endif // __LLFRAME_USE_MODULE__
-namespace llframe
-{
-   
+namespace llframe {
 
-
-} // llframe
+} // namespace llframe
 #endif //__LLFRAME_TENSOR_HPP__

@@ -21,6 +21,7 @@ option(TEST_LLFRAME "test llframe" ON)
 option(TEST_CORE "test llfrmae::core" ON)
 option(TEST_MEMORY "test llfrmae::memory" ON)
 option(TEST_TENSOR "test llfrmae::tensor" ON)
+
 # #---------- reletive path define ----------##
 set(CORE_TEST_RELATIVE_DIR "core")
 set(MEMORY_TEST_RELATIVE_DIR "memory")
@@ -58,6 +59,7 @@ if(TEST_TENSOR)
     set(TEST_ALL_FILES ${LLFrame_TEST_FILES} PARENT_SCOPE)
     add_subdirectory(${TENSOR_TEST_DIR})
 endif(TEST_TENSOR)
+
 # #---------- TEST_ALL ----------##
 add_executable(test_LLFrame ${LLFrame_TEST_FILES})
 target_include_directories(test_LLFrame

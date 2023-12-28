@@ -24,10 +24,9 @@
 module;
 #include "core/exception.hpp"
 export module llframe.core.exception;
-export namespace llframe
-{
-    using llframe::Exception;
-    using llframe::Un_Implement;
-    using llframe::Bad_Alloc;
-    using llframe::Out_Range;
-}
+export namespace llframe {
+using llframe::Exception;
+using llframe::Un_Implement;
+using llframe::Bad_Alloc;
+using llframe::Out_Range;
+} // namespace llframe

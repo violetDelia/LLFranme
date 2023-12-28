@@ -7,6 +7,4 @@ import llframe.memory.allocator;
 #include "memory/allocator.hpp"
 #endif // __LLFRAME_USE_MODULE__
 
-
-
 #endif // TEST_ALLOCATOR

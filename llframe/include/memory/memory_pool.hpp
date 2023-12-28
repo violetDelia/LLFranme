@@ -30,9 +30,8 @@
 #else
 
 #endif // __LLFRAME_USE_MODULE__
-namespace llframe
-{
-    
-} // llframe
+namespace llframe {
+
+} // namespace llframe
 
 #endif //__LLFRAME_MEMORY_POOL_HPP__

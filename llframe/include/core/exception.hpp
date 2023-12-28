@@ -27,180 +27,162 @@
 #include <string>
 #include <stdio.h>
 
-#include <iostream>
-
 // Exception
-namespace llframe
-{
+namespace llframe {
+/**
+ * @brief 异常
+ *
+ */
+class Exception {
+public:
+    constexpr Exception() = default;
+
+    constexpr Exception(const Exception &other) noexcept = default;
+
+    constexpr Exception(Exception &&other) noexcept = default;
+
     /**
-     * @brief 异常
+     * @brief 构造Exception
      *
+     *
+     * @param message 异常信息
      */
-    class Exception
-    {
-    public:
-        constexpr Exception() = default;
+    constexpr Exception(const char *message) noexcept;
 
-        constexpr Exception(const Exception &other) noexcept = default;
+    /**
+     * @brief 构造Exception
+     *
+     *
+     * @param message 异常信息
+     * @param file 源文件名
+     * @param line 所在源文件行数
+     * @param func_name 所在源文件的函数名
+     */
+    constexpr Exception(const char *message, const char *file,
+                        const size_t line, const char *func_name) noexcept;
 
-        constexpr Exception(Exception &&other) noexcept = default;
+    /**
+     * @brief 构造Exception
+     *
+     *
+     * @param file 源文件名
+     * @param line 所在源文件行数
+     * @param func_name 所在源文件的函数名
+     */
+    constexpr Exception(const char *file, const size_t line,
+                        const char *func_name) noexcept;
 
-        /**
-         * @brief 构造Exception
-         *
-         *
-         * @param message 异常信息
-         */
-        constexpr Exception(const char *message) noexcept;
+    /**
+     * @brief 记录异常的传递信息
+     *
+     *
+     * @param file 文件名
+     * @param line 行数
+     * @param func_name 函数名
+     * @return  异常信息
+     */
+    [[nodiscard]] constexpr virtual std::string what() const noexcept;
 
-        /**
-         * @brief 构造Exception
-         *
-         *
-         * @param message 异常信息
-         * @param file 源文件名
-         * @param line 所在源文件行数
-         * @param func_name 所在源文件的函数名
-         */
-        constexpr Exception(const char *message,
-                            const char *file,
-                            const size_t line,
-                            const char *func_name) noexcept;
+    /**
+     * @brief 记录异常的传递信息
+     *
+     *
+     * @param file 文件名
+     * @param line 行数
+     * @param func_name 函数名
+     */
+    constexpr void up_info(const char *file, const size_t line,
+                           const char *func_name) noexcept;
 
-        /**
-         * @brief 构造Exception
-         *
-         *
-         * @param file 源文件名
-         * @param line 所在源文件行数
-         * @param func_name 所在源文件的函数名
-         */
-        constexpr Exception(const char *file,
-                            const size_t line,
-                            const char *func_name) noexcept;
+    // protected:
+public:
+    // 异常信息
+    const std::string message{"unknown exception!"};
+    // 位置信息
+    std::string locations{"\n"};
+};
 
-        /**
-         * @brief 记录异常的传递信息
-         *
-         *
-         * @param file 文件名
-         * @param line 行数
-         * @param func_name 函数名
-         * @return  异常信息
-         */
-        [[nodiscard]] constexpr virtual std::string what() const noexcept;
+constexpr Exception::Exception(const char *message) noexcept :
+    message(message){};
 
-        /**
-         * @brief 记录异常的传递信息
-         *
-         *
-         * @param file 文件名
-         * @param line 行数
-         * @param func_name 函数名
-         */
-        constexpr void up_info(const char *file,
+constexpr Exception::Exception(const char *message, const char *file,
                                const size_t line,
-                               const char *func_name) noexcept;
+                               const char *func_name) noexcept :
+    message(message) {
+    this->up_info(file, line, func_name);
+};
 
-        // protected:
-    public:
-        // 异常信息
-        const std::string message{"unknown exception!"};
-        // 位置信息
-        std::string locations{"\n"};
-    };
+constexpr Exception::Exception(const char *file, const size_t line,
+                               const char *func_name) noexcept {
+    this->up_info(file, line, func_name);
+};
 
-    constexpr Exception::Exception(const char *message) noexcept
-        : message(message){};
+constexpr std::string Exception::what() const noexcept {
+    return this->message + this->locations;
+};
 
-    constexpr Exception::Exception(const char *message,
-                                   const char *file,
-                                   const size_t line,
-                                   const char *func_name) noexcept
-        : message(message)
-    {
-        this->up_info(file, line, func_name);
-    };
+constexpr void Exception::up_info(const char *file, const size_t line,
+                                  const char *func_name) noexcept {
+    this->locations.append("\t");
+    this->locations.append(func_name);
+    this->locations.append(": ");
+    this->locations.append(file);
+    this->locations.append("<");
+    this->locations.append(std::to_string(line));
+    this->locations.append(">\n");
+};
+} // namespace llframe
+// Un_Implement
+namespace llframe {
+class Un_Implement : public Exception {
+public:
+    using Exception::Exception;
 
-    constexpr Exception::Exception(const char *file,
-                                   const size_t line,
-                                   const char *func_name) noexcept
-    {
-        this->up_info(file, line, func_name);
-    };
+    constexpr std::string what() const noexcept override;
 
-    constexpr std::string Exception::what() const noexcept
-    {
-        return this->message + this->locations;
-    };
+public:
+    // 异常信息
+    const std::string message{"not implement!"};
+};
 
-    constexpr void Exception::up_info(const char *file,
-                                      const size_t line,
-                                      const char *func_name) noexcept
-    {
-        this->locations.append("\t");
-        this->locations.append(func_name);
-        this->locations.append(": ");
-        this->locations.append(file);
-        this->locations.append("<");
-        this->locations.append(std::to_string(line));
-        this->locations.append(">\n");
-    };
+constexpr std::string Un_Implement::what() const noexcept {
+    return this->message + this->locations;
+};
+} // namespace llframe
+// Bad_Alloc
+namespace llframe {
+class Bad_Alloc : public Exception {
+public:
+    using Exception::Exception;
 
-    class Un_Implement : public Exception
-    {
-    public:
-        using Exception::Exception;
+    constexpr std::string what() const noexcept override;
 
-        constexpr std::string what() const noexcept override;
+public:
+    // 异常信息
+    const std::string message{"bad allocate!"};
+};
 
-    public:
-        // 异常信息
-        const std::string message{"not implement!"};
-    };
+constexpr std::string Bad_Alloc::what() const noexcept {
+    return this->message + this->locations;
+};
 
-    constexpr std::string
-    Un_Implement::what() const noexcept
-    {
-        return this->message + this->locations;
-    };
+class Out_Range : public Exception {
+public:
+    using Exception::Exception;
 
-    class Bad_Alloc : public Exception
-    {
-    public:
-        using Exception::Exception;
+    constexpr std::string what() const noexcept override;
 
-        constexpr std::string what() const noexcept override;
+public:
+    // 异常信息
+    const std::string message{"out of range!"};
+};
+} // namespace llframe
+// Out_Range
+namespace llframe {
+constexpr std::string Out_Range::what() const noexcept {
+    return this->message + this->locations;
+};
 
-    public:
-        // 异常信息
-        const std::string message{"bad allocate!"};
-    };
-
-    constexpr std::string
-    Bad_Alloc::what() const noexcept
-    {
-        return this->message + this->locations;
-    };
-
-    class Out_Range : public Exception
-    {
-    public:
-        using Exception::Exception;
-
-        constexpr std::string what() const noexcept override;
-
-    public:
-        // 异常信息
-        const std::string message{"out of range!"};
-    };
-
-    constexpr std::string
-    Out_Range::what() const noexcept
-    {
-        return this->message + this->locations;
-    };
-
-} // llframe
+} // namespace llframe
 
 #endif //__LLFRAME_EXCEPTION_HPP__

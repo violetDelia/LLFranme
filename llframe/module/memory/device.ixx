@@ -23,12 +23,11 @@
 module;
 #include "memory/device.hpp"
 export module llframe.memory.device;
-export namespace llframe::device
-{
-        //using llframe::_Device;
-        using llframe::CPU;
-        using llframe::GPU;
-        using llframe::HOST;
-        using llframe::is_Device;
+export namespace llframe::device {
+// using llframe::_Device;
+using llframe::CPU;
+using llframe::GPU;
+using llframe::HOST;
+using llframe::is_Device;
 
-}
+} // namespace llframe::device

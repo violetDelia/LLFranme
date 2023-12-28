@@ -23,18 +23,17 @@
 module;
 #include "core/base_type.hpp"
 export module llframe.core.base_type;
-export namespace llframe
-{
-    using llframe:: float32_t;
-    using llframe::float64_t;
-    using llframe::int16_t;
-    using llframe::int32_t;
-    using llframe::int64_t;
-    using llframe::int8_t;
-    using llframe::ptrdiff_t;
-    using llframe::size_t;
-    using llframe::uint16_t;
-    using llframe::uint32_t;
-    using llframe::uint64_t;
-    using llframe::uint8_t;
-}
+export namespace llframe {
+using llframe::float32_t;
+using llframe::float64_t;
+using llframe::int16_t;
+using llframe::int32_t;
+using llframe::int64_t;
+using llframe::int8_t;
+using llframe::ptrdiff_t;
+using llframe::size_t;
+using llframe::uint16_t;
+using llframe::uint32_t;
+using llframe::uint64_t;
+using llframe::uint8_t;
+} // namespace llframe

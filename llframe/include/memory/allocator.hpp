@@ -34,204 +34,182 @@ import llframe.core.base_type;
 #endif // __LLFRAME_USE_MODULE__
 #include <memory>
 // _Allocator_Base
-namespace llframe
-{
+namespace llframe {
+/**
+ * @brief 分配器,确保能够编译时分配内存,内存池后面再说
+ *
+ *
+ * @tparam Ty 分配对象的类型
+ * @tparam Device 设备类型
+ */
+template <class Ty>
+class _Allocator_Base {
+public:
+    using value_type = Ty;
+    using value_pointer = Ty *;
+    using size_type = size_t;
+    using difference_type = ptrdiff_t;
+    using propagate_on_container_move_assignment = std::true_type;
+
+public:
+    /**
+     * @brief 分配内存
+     * @param n 数量
+     * @return 内存头指针
+     */
+    [[nodiscard]] static constexpr value_pointer allocate(size_type n);
 
     /**
-     * @brief 分配器,确保能够编译时分配内存,内存池后面再说
+     * @brief 解内存
      *
-     *
-     * @tparam Ty 分配对象的类型
-     * @tparam Device 设备类型
+     * @param p 内存指针
+     * @param n 数量
+     * @return
      */
-    template <class Ty>
-    class _Allocator_Base
-    {
-    public:
-        using value_type = Ty;
-        using value_pointer = Ty *;
-        using size_type = size_t;
-        using difference_type = ptrdiff_t;
-        using propagate_on_container_move_assignment = std::true_type;
+    static constexpr void deallocate(value_type *p, size_type n) noexcept;
 
-    public:
-        /**
-         * @brief 分配内存
-         * @param n 数量
-         * @return 内存头指针
-         */
-        [[nodiscard]] static constexpr value_pointer allocate(size_type n);
+protected:
+    /**
+     * @brief 获取的内存长度
+     * @tparam _Ty_Size 类型
+     * @param n 数量
+     * @return 长度  字节数
+     */
+    template <size_type _Ty_Size>
+    static constexpr size_type _get_size(const size_type n);
+};
 
-        /**
-         * @brief 解内存
-         *
-         * @param p 内存指针
-         * @param n 数量
-         * @return
-         */
-        static constexpr void deallocate(value_type *p, size_type n) noexcept;
+template <class Ty>
+constexpr _Allocator_Base<Ty>::value_pointer
+_Allocator_Base<Ty>::allocate(size_type n) {
+    __LLFRAME_THROW_EXCEPTION__(Un_Implement);
+};
 
-    protected:
-        /**
-         * @brief 获取的内存长度
-         * @tparam _Ty_Size 类型
-         * @param n 数量
-         * @return 长度  字节数
-         */
-        template <size_type _Ty_Size>
-        static constexpr size_type _get_size(const size_type n);
-    };
+template <class Ty>
+constexpr void _Allocator_Base<Ty>::deallocate(Ty *p, size_type n) noexcept {
+    __LLFRAME_THROW_EXCEPTION__(Un_Implement);
+};
 
-    template <class Ty>
-    constexpr _Allocator_Base<Ty>::value_pointer
-    _Allocator_Base<Ty>::allocate(size_type n)
-    {
-        __LLFRAME_THROW_EXCEPTION__(Un_Implement);
-    };
-
-    template <class Ty>
-    constexpr void
-    _Allocator_Base<Ty>::deallocate(Ty *p, size_type n) noexcept
-    {
-        __LLFRAME_THROW_EXCEPTION__(Un_Implement);
-    };
-
-    template <class Ty>
-    template <_Allocator_Base<Ty>::size_type _Ty_Size>
-    constexpr _Allocator_Base<Ty>::size_type
-    _Allocator_Base<Ty>::_get_size(const size_type n)
-    {
-        constexpr bool _overflow_posibility = _Ty_Size > 1;
-        if constexpr (_overflow_posibility)
-        {
-            constexpr size_t _max_n = std::numeric_limits<size_t>::max() / _Ty_Size;
-            if (_max_n < n)
-            {
-                __LLFRAME_THROW_EXCEPTION_INFO__(Bad_Alloc, "allocate overflow!")
-            }
+template <class Ty>
+template <_Allocator_Base<Ty>::size_type _Ty_Size>
+constexpr _Allocator_Base<Ty>::size_type
+_Allocator_Base<Ty>::_get_size(const size_type n) {
+    constexpr bool _overflow_posibility = _Ty_Size > 1;
+    if constexpr (_overflow_posibility) {
+        constexpr size_t _max_n = std::numeric_limits<size_t>::max() / _Ty_Size;
+        if (_max_n < n) {
+            __LLFRAME_THROW_EXCEPTION_INFO__(Bad_Alloc, "allocate overflow!")
         }
-        return n * _Ty_Size;
-    };
-}; // llframe
-
+    }
+    return n * _Ty_Size;
+};
+}; // namespace llframe
 // Allocator
-namespace llframe
-{
-    template <class Ty, device::is_Device Device = HOST>
-    class Allocator : public _Allocator_Base<Ty>
-    {
-    private:
-        using base_class = _Allocator_Base<Ty>;
+namespace llframe {
+template <class Ty, device::is_Device Device = HOST>
+class Allocator : public _Allocator_Base<Ty> {
+private:
+    using Base = _Allocator_Base<Ty>;
 
-    public:
-        using value_type = base_class::value_type;
-        using value_pointer = base_class::value_pointer;
-        using device_type = Device;
-        using size_type = base_class::size_type;
-        using difference_type = base_class::difference_type;
-        using propagate_on_container_move_assignment =
-            base_class::propagate_on_container_move_assignment;
-    };
+public:
+    using value_type = Base::value_type;
+    using value_pointer = Base::value_pointer;
+    using device_type = Device;
+    using size_type = Base::size_type;
+    using difference_type = Base::difference_type;
+    using propagate_on_container_move_assignment =
+        Base::propagate_on_container_move_assignment;
+};
 
-}; // llframe
-
+}; // namespace llframe
 // Allocator<Ty, HOST>
-namespace llframe
-{
+namespace llframe {
+template <class Ty>
+class Allocator<Ty, HOST> : public _Allocator_Base<Ty> {
+private:
+    using Base = _Allocator_Base<Ty>;
 
-    template <class Ty>
-    class Allocator<Ty, HOST> : public _Allocator_Base<Ty>
-    {
-    private:
-        using base_class = _Allocator_Base<Ty>;
+public:
+    using value_type = Base::value_type;
+    using value_pointer = Base::value_pointer;
+    using device_type = HOST;
+    using size_type = Base::size_type;
+    using difference_type = Base::difference_type;
+    using propagate_on_container_move_assignment =
+        Base::propagate_on_container_move_assignment;
 
-    public:
-        using value_type = base_class::value_type;
-        using value_pointer = base_class::value_pointer;
-        using device_type = HOST;
-        using size_type = base_class::size_type;
-        using difference_type = base_class::difference_type;
-        using propagate_on_container_move_assignment =
-            base_class::propagate_on_container_move_assignment;
+public:
+    /**
+     * @brief 分配内存 HOST特化
+     *
+     * @param n 数量
+     * @return 头指针
+     */
+    [[nodiscard]] static constexpr value_pointer allocate(size_type n);
 
-    public:
-        /**
-         * @brief 分配内存 HOST特化
-         *
-         * @param n 数量
-         * @return 头指针
-         */
-        [[nodiscard]] static constexpr value_pointer allocate(size_type n);
+    /**
+     * @brief 接分配内存 HOST特化
+     *
+     * @param n 数量
+     * @param p 内存指针
+     * @return
+     */
+    static inline constexpr void deallocate(value_pointer p, size_type n);
+};
 
-        /**
-         * @brief 接分配内存 HOST特化
-         *
-         * @param n 数量
-         * @param p 内存指针
-         * @return
-         */
-        static inline constexpr void deallocate(value_pointer p, size_type n);
-    };
+template <class Ty>
+constexpr Allocator<Ty, HOST>::value_pointer
+Allocator<Ty, HOST>::allocate(size_type n) {
+    size_type allocate_size{};
+    __LLFRAME_TRY_CATCH_BEGIN__
+    allocate_size = Base::_get_size<sizeof(Ty)>(n);
+    __LLFRAME_TRY_CATCH_END__
+    return allocate_size == 0 ?
+               nullptr :
+               static_cast<Ty *>(::operator new(allocate_size));
+}
 
-    template <class Ty>
-    constexpr Allocator<Ty, HOST>::value_pointer
-    Allocator<Ty, HOST>::allocate(size_type n)
-    {
-        size_type allocate_size{};
-        __LLFRAME_TRY_CATCH_BEGIN__
-        allocate_size = base_class::_get_size<sizeof(Ty)>(n);
-        __LLFRAME_TRY_CATCH_END__
-        return allocate_size == 0 ? nullptr : static_cast<Ty *>(::operator new(allocate_size));
-    }
+template <class Ty>
+inline constexpr void Allocator<Ty, HOST>::deallocate(value_pointer p,
+                                                      size_type n) {
+    ::operator delete(p, n);
+}
 
-    template <class Ty>
-    inline constexpr void
-    Allocator<Ty, HOST>::deallocate(value_pointer p, size_type n)
-    {
-        ::operator delete(p, n);
-    }
-
-}; // llframe
-
+}; // namespace llframe
 // Allocator<Ty, CPU>
-namespace llframe
-{
-    template <class Ty>
-    class Allocator<Ty, CPU> : public _Allocator_Base<Ty>
-    {
-    private:
-        using base_class = _Allocator_Base<Ty>;
+namespace llframe {
+template <class Ty>
+class Allocator<Ty, CPU> : public Allocator<Ty, HOST> {
+private:
+    using Base = Allocator<Ty, HOST>;
 
-    public:
-        using value_type = base_class::value_type;
-        using value_pointer = base_class::value_pointer;
-        using device_type = CPU;
-        using size_type = base_class::size_type;
-        using difference_type = base_class::difference_type;
-        using propagate_on_container_move_assignment =
-            base_class::propagate_on_container_move_assignment;
-    };
+public:
+    using value_type = Base::value_type;
+    using value_pointer = Base::value_pointer;
+    using device_type = CPU;
+    using size_type = Base::size_type;
+    using difference_type = Base::difference_type;
+    using propagate_on_container_move_assignment =
+        Base::propagate_on_container_move_assignment;
+};
 
-} // llframe
-
+} // namespace llframe
 // Allocator<Ty, GPU>
-namespace llframe
-{
-    template <class Ty>
-    class Allocator<Ty, GPU> : public _Allocator_Base<Ty>
-    {
-    private:
-        using base_class = _Allocator_Base<Ty>;
+namespace llframe {
+template <class Ty>
+class Allocator<Ty, GPU> : public Allocator<Ty, HOST> {
+private:
+    using Base = Allocator<Ty, HOST>;
 
-    public:
-        using value_type = base_class::value_type;
-        using value_pointer = base_class::value_pointer;
-        using device_type = GPU;
-        using size_type = base_class::size_type;
-        using difference_type = base_class::difference_type;
-        using propagate_on_container_move_assignment =
-            base_class::propagate_on_container_move_assignment;
-    };
+public:
+    using value_type = Base::value_type;
+    using value_pointer = Base::value_pointer;
+    using device_type = GPU;
+    using size_type = Base::size_type;
+    using difference_type = Base::difference_type;
+    using propagate_on_container_move_assignment =
+        Base::propagate_on_container_move_assignment;
+};
 
-} // llframe
+} // namespace llframe
 #endif //__LLFRAME_CONFIG_HPP__

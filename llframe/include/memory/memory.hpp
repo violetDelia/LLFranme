@@ -28,8 +28,7 @@ import llframe.memory.allocator;
 #else
 #include "memory/allocator.hpp"
 #endif // __LLFRAME_USE_MODULE__
-namespace llframe
-{
+namespace llframe {
 
-} // llframe
+} // namespace llframe
 #endif //__LLFRAME_MEMORY_HPP__

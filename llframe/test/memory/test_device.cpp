@@ -6,6 +6,5 @@ import llframe.memory.device;
 #else
 #include "memory/device.hpp"
 
-
 #endif // __LLFRAME_USE_MODULE__
 #endif // TEST_DEVICE

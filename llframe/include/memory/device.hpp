@@ -29,54 +29,42 @@ import llframe.core.base_type;
 #else
 #include "core/base_type.hpp"
 #endif // __LLFRAME_USE_MODULE__
-namespace llframe
-{
+namespace llframe { inline namespace device {
+/**
+ * @brief 记录设备信息
+ *
+ */
+class _Device {
+private:
+    size_t id{};
 
-    inline namespace device
-    {
-        /**
-         * @brief 记录设备信息
-         *
-         */
-        class _Device
-        {
-        private:
-            size_t id{};
+public:
+    /**
+     * @brief
+     * @param id
+     */
+    constexpr _Device(size_t id);
 
-        public:
-            /**
-             * @brief
-             * @param id
-             */
-            constexpr _Device(size_t id);
+    constexpr _Device() = default;
 
-            constexpr _Device() = default;
+    constexpr _Device(const _Device &other) = default;
 
-            constexpr _Device(const _Device &other) = default;
+    constexpr _Device(_Device &&other) = default;
 
-            constexpr _Device(_Device &&other) = default;
+    _Device &operator=(const _Device &other) = default;
 
-            _Device &operator=(const _Device &other) = default;
+    _Device &operator=(_Device &other) = default;
+};
 
-            _Device &operator=(_Device &other) = default;
-        };
+class HOST : public _Device {};
 
-        class HOST : public _Device
-        {
-        };
+class CPU : public _Device {};
 
-        class CPU : public _Device
-        {
-        };
+class GPU : public _Device {};
 
-        class GPU : public _Device
-        {
-        };
+// 是设备
+template <class Ty>
+concept is_Device = std::is_base_of_v<_Device, Ty>;
 
-        //是设备
-        template <class Ty>
-        concept is_Device = std::is_base_of_v<_Device, Ty>;
-
-    }
-} // llframe
+}}     // namespace llframe::device
 #endif //__LLFRAME_MEMORY_HPP__

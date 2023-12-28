@@ -24,9 +24,9 @@
 module;
 #include "core/helper.hpp"
 export module llframe.core.helper;
-export namespace llframe
-{
-    using llframe::is_instance;
-    using llframe::is_Integral;
-    using llframe::consteval_min;
-} // llframe
+export namespace llframe {
+using llframe::add_const_t;
+using llframe::consteval_min;
+using llframe::is_instance;
+using llframe::is_Integral;
+} // namespace llframe

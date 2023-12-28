@@ -15,7 +15,7 @@
 /**
  * @file size.hpp
  * @brief 形状
- * @details 
+ * @details
  * @author 时光丶人爱
  * @date 2023-12-9
  * @see If you have any questions about the code or if you think there is a better way to implement
@@ -38,6 +38,7 @@ namespace llframe
 {
     template <is_Integral... Integrals>
     class Size;
+
     template <class Ty>
     concept is_Size = is_instance<Ty, Size>;
 } // llframe
