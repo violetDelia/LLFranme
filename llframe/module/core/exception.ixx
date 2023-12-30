@@ -29,4 +29,5 @@ using llframe::Exception;
 using llframe::Un_Implement;
 using llframe::Bad_Alloc;
 using llframe::Out_Range;
+using llframe::Null_Pointer;
 } // namespace llframe

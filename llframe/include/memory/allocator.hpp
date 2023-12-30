@@ -44,20 +44,26 @@ namespace llframe {
  */
 template <class Ty>
 class _Allocator_Base {
-public:
-    using value_type = Ty;
-    using value_pointer = Ty *;
-    using size_type = size_t;
-    using difference_type = ptrdiff_t;
-    using propagate_on_container_move_assignment = std::true_type;
+private:
+    using Self = _Allocator_Base<Ty>;
 
 public:
+    using value_type = Ty;
+    using pointer = Ty *;
+    using const_pointer = const typename std::remove_const<Ty> *;
+    using reference = Ty &;
+    using size_type = size_t;
+    using difference_type = ptrdiff_t;
+
+public:
+    constexpr _Allocator_Base() noexcept = delete;
+
     /**
      * @brief 分配内存
      * @param n 数量
      * @return 内存头指针
      */
-    [[nodiscard]] static constexpr value_pointer allocate(size_type n);
+    [[nodiscard]] static constexpr pointer allocate(size_type n);
 
     /**
      * @brief 解内存
@@ -66,7 +72,7 @@ public:
      * @param n 数量
      * @return
      */
-    static constexpr void deallocate(value_type *p, size_type n) noexcept;
+    constexpr static void deallocate(value_type *p, size_type n);
 
 protected:
     /**
@@ -80,14 +86,21 @@ protected:
 };
 
 template <class Ty>
-constexpr _Allocator_Base<Ty>::value_pointer
+constexpr _Allocator_Base<Ty>::pointer
 _Allocator_Base<Ty>::allocate(size_type n) {
-    __LLFRAME_THROW_EXCEPTION__(Un_Implement);
+    size_type allocate_size{};
+    __LLFRAME_TRY_CATCH_BEGIN__
+    allocate_size = Self::_get_size<sizeof(Ty)>(n);
+    __LLFRAME_TRY_CATCH_END__
+    return allocate_size == 0 ?
+               nullptr :
+               static_cast<Ty *>(::operator new(allocate_size));
+    ;
 };
 
 template <class Ty>
-constexpr void _Allocator_Base<Ty>::deallocate(Ty *p, size_type n) noexcept {
-    __LLFRAME_THROW_EXCEPTION__(Un_Implement);
+constexpr void _Allocator_Base<Ty>::deallocate(Ty *p, size_type n) {
+    ::operator delete(p, n);
 };
 
 template <class Ty>
@@ -113,12 +126,12 @@ private:
 
 public:
     using value_type = Base::value_type;
-    using value_pointer = Base::value_pointer;
+    using pointer = Base::pointer;
+    using const_pointer = Base::const_pointer;
+    using reference = Base::reference;
     using device_type = Device;
     using size_type = Base::size_type;
     using difference_type = Base::difference_type;
-    using propagate_on_container_move_assignment =
-        Base::propagate_on_container_move_assignment;
 };
 
 }; // namespace llframe
@@ -131,49 +144,13 @@ private:
 
 public:
     using value_type = Base::value_type;
-    using value_pointer = Base::value_pointer;
+    using pointer = Base::pointer;
+    using const_pointer = Base::const_pointer;
+    using reference = Base::reference;
     using device_type = HOST;
     using size_type = Base::size_type;
     using difference_type = Base::difference_type;
-    using propagate_on_container_move_assignment =
-        Base::propagate_on_container_move_assignment;
-
-public:
-    /**
-     * @brief 分配内存 HOST特化
-     *
-     * @param n 数量
-     * @return 头指针
-     */
-    [[nodiscard]] static constexpr value_pointer allocate(size_type n);
-
-    /**
-     * @brief 接分配内存 HOST特化
-     *
-     * @param n 数量
-     * @param p 内存指针
-     * @return
-     */
-    static inline constexpr void deallocate(value_pointer p, size_type n);
 };
-
-template <class Ty>
-constexpr Allocator<Ty, HOST>::value_pointer
-Allocator<Ty, HOST>::allocate(size_type n) {
-    size_type allocate_size{};
-    __LLFRAME_TRY_CATCH_BEGIN__
-    allocate_size = Base::_get_size<sizeof(Ty)>(n);
-    __LLFRAME_TRY_CATCH_END__
-    return allocate_size == 0 ?
-               nullptr :
-               static_cast<Ty *>(::operator new(allocate_size));
-}
-
-template <class Ty>
-inline constexpr void Allocator<Ty, HOST>::deallocate(value_pointer p,
-                                                      size_type n) {
-    ::operator delete(p, n);
-}
 
 }; // namespace llframe
 // Allocator<Ty, CPU>
@@ -185,12 +162,16 @@ private:
 
 public:
     using value_type = Base::value_type;
-    using value_pointer = Base::value_pointer;
+    using pointer = Base::pointer;
+    using const_pointer = Base::const_pointer;
+    using reference = Base::reference;
     using device_type = CPU;
     using size_type = Base::size_type;
     using difference_type = Base::difference_type;
-    using propagate_on_container_move_assignment =
-        Base::propagate_on_container_move_assignment;
+
+public:
+    [[nodiscard]] static constexpr pointer allocate(size_type n);
+    constexpr static void deallocate(value_type *p, size_type n);
 };
 
 } // namespace llframe
@@ -203,12 +184,16 @@ private:
 
 public:
     using value_type = Base::value_type;
-    using value_pointer = Base::value_pointer;
+    using pointer = Base::pointer;
+    using const_pointer = Base::const_pointer;
+    using reference = Base::reference;
     using device_type = GPU;
     using size_type = Base::size_type;
     using difference_type = Base::difference_type;
-    using propagate_on_container_move_assignment =
-        Base::propagate_on_container_move_assignment;
+
+public:
+    [[nodiscard]] static constexpr pointer allocate(size_type n);
+    constexpr static void deallocate(value_type *p, size_type n);
 };
 
 } // namespace llframe

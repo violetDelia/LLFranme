@@ -23,57 +23,55 @@
 #ifndef __LLFRAME_CONCEPTIONS_HPP__
 #define __LLFRAME_CONCEPTIONS_HPP__
 #include <type_traits>
-namespace llframe
-{
-    // 是整形
-    template <class Ty>
-    concept is_Integral = std::is_integral_v<Ty>;
+namespace llframe {
+// 是整形
+template <class Ty>
+concept is_Integral = std::is_integral_v<Ty>;
 
-    template <class TT, class UT>
-    consteval auto consteval_min(const TT &lfte_value, const UT &right_value) noexcept
-    {
-        return (lfte_value < right_value) ? lfte_value : right_value;
-    }
+template <class TT, class UT>
+consteval auto consteval_min(const TT &lfte_value,
+                             const UT &right_value) noexcept {
+    return (lfte_value < right_value) ? lfte_value : right_value;
+}
 
-    template <class _Ty, template <class...> class _Ty_Base>
-    struct _Is_Instance : public std::false_type
-    {
-    };
+template <class _Ty, template <class...> class _Ty_Base>
+struct _Is_Instance : public std::false_type {};
 
-    template <template <class...> class _Ty_Base, class... _Args>
-    struct _Is_Instance<_Ty_Base<_Args...>, _Ty_Base> : public std::true_type
-    {
-    };
+template <template <class...> class _Ty_Base, class... _Args>
+struct _Is_Instance<_Ty_Base<_Args...>, _Ty_Base> : public std::true_type {};
 
-    /**
-     * @brief 是否是模板类的一个实例
-     *
-     * @tparam Ty 模板类实例
-     * @tparam Ty_Base 模板基类
-     */
-    template <class Ty, template <class...> class Ty_Base>
-    constexpr inline bool is_instance = _Is_Instance<std::remove_cv_t<std::remove_reference_t<Ty>>, Ty_Base>::value;
+/**
+ * @brief 是否是模板类的一个实例
+ *
+ * @tparam Ty 模板类实例
+ * @tparam Ty_Base 模板基类
+ */
+template <class Ty, template <class...> class Ty_Base>
+constexpr inline bool is_instance =
+    _Is_Instance<std::remove_cv_t<std::remove_reference_t<Ty>>, Ty_Base>::value;
 
-    template <typename _Ty>
-    struct _add_const
-    {
-        using type = const _Ty;
-    };
+template <typename _Ty>
+struct _add_const {
+    using type = const _Ty;
+};
 
-    template <typename _Ty>
-    struct _add_const<_Ty &>
-    {
-        using type = const std::remove_const_t<_Ty> &;
-    };
+template <typename _Ty>
+struct _add_const<_Ty &> {
+    using type = const std::remove_const_t<_Ty> &;
+};
 
-    template <typename _Ty>
-    struct _add_const<_Ty *>
-    {
-        using type = const std::remove_const_t<_Ty> *;
-    };
+template <typename _Ty>
+struct _add_const<_Ty *> {
+    using type = const std::remove_const_t<_Ty> *;
+};
 
-    template <typename Ty>
-    using add_const_t = typename _add_const<Ty>::type;
-} // llframe
+/**
+ * @brief 添加const关键字
+ *
+ * @tparam Ty
+ */
+template <typename Ty>
+using add_const_t = typename _add_const<Ty>::type;
+} // namespace llframe
 
 #endif //__LLFRAME_CONCEPTIONS_HPP__

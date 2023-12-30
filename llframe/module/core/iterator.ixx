@@ -97,4 +97,10 @@ operator-=(Iterator &iterator, const typename Iterator::difference_type n);
 template <is_Random_Iterator Left_Iterator, is_Random_Iterator Right_Iterator>
 constexpr typename Left_Iterator::difference_type
 operator-(const Left_Iterator &left, const Right_Iterator &right) noexcept;
+
+template <is_Forward_Iterator Iterator>
+std::ostream &operator<<(std::ostream &os, const Iterator &it);
+
+template <is_Forward_Iterator Iterator>
+std::ostream &operator<<(std::ostream &os, const Iterator &&it);
 } // namespace llframe

@@ -42,8 +42,8 @@ import llframe.core.helper;
 #include "core/exception_helper.hpp"
 #include <type_traits>
 #include <iterator>
-
-// define other
+#include <iostream>
+// define concelptions
 namespace llframe {
 
 template <class Container>
@@ -107,15 +107,15 @@ concept is_Random_Iterator = _Is_Random_Iterator<Ty>::value;
 // define operator
 namespace llframe {
 template <is_Forward_Iterator Left_Iterator, is_Forward_Iterator Right_Iterator>
-[[nodiscard]] constexpr bool operator==(const Left_Iterator &left,
-                                        const Right_Iterator &right) noexcept;
+[[nodiscard]] constexpr inline bool
+operator==(const Left_Iterator &left, const Right_Iterator &right) noexcept;
 
 template <is_Forward_Iterator Left_Iterator, is_Forward_Iterator Right_Iterator>
-[[nodiscard]] constexpr bool operator!=(const Left_Iterator &left,
-                                        const Right_Iterator &right) noexcept;
+[[nodiscard]] constexpr inline bool
+operator!=(const Left_Iterator &left, const Right_Iterator &right) noexcept;
 
 template <is_Forward_Iterator Iterator>
-[[nodiscard]] constexpr typename Iterator::reference
+[[nodiscard]] constexpr inline typename Iterator::reference
 operator*(const Iterator &iterator) noexcept;
 
 template <is_Forward_Iterator Iterator>
@@ -131,20 +131,20 @@ template <is_Bidirectional_Iterator Iterator>
 constexpr typename Iterator::Self operator--(Iterator &iterator, int);
 
 template <is_Random_Iterator Left_Iterator, is_Random_Iterator Right_Iterator>
-[[nodiscard]] constexpr bool operator>(const Left_Iterator &left,
-                                       const Right_Iterator &right) noexcept;
+[[nodiscard]] constexpr inline bool
+operator>(const Left_Iterator &left, const Right_Iterator &right) noexcept;
 
 template <is_Random_Iterator Left_Iterator, is_Random_Iterator Right_Iterator>
-[[nodiscard]] constexpr bool operator<(const Left_Iterator &left,
-                                       const Right_Iterator &right) noexcept;
+[[nodiscard]] constexpr inline bool
+operator<(const Left_Iterator &left, const Right_Iterator &right) noexcept;
 
 template <is_Random_Iterator Left_Iterator, is_Random_Iterator Right_Iterator>
-[[nodiscard]] constexpr bool operator>=(const Left_Iterator &left,
-                                        const Right_Iterator &right) noexcept;
+[[nodiscard]] constexpr inline bool
+operator>=(const Left_Iterator &left, const Right_Iterator &right) noexcept;
 
 template <is_Random_Iterator Left_Iterator, is_Random_Iterator Right_Iterator>
-[[nodiscard]] constexpr bool operator<=(const Left_Iterator &left,
-                                        const Right_Iterator &right) noexcept;
+[[nodiscard]] constexpr inline bool
+operator<=(const Left_Iterator &left, const Right_Iterator &right) noexcept;
 
 template <is_Random_Iterator Iterator>
 [[nodiscard]] constexpr typename Iterator::Self
@@ -170,6 +170,15 @@ template <is_Random_Iterator Iterator>
 [[nodiscard]] constexpr typename Iterator::Self
 operator+(const typename Iterator::difference_type n, const Iterator &iterator);
 
+} // namespace llframe
+
+// define others
+namespace llframe {
+template <is_Forward_Iterator Iterator>
+std::ostream &operator<<(std::ostream &os, const Iterator &it);
+
+template <is_Forward_Iterator Iterator>
+std::ostream &operator<<(std::ostream &os, const Iterator &&it);
 } // namespace llframe
 
 // define iterator
@@ -211,18 +220,24 @@ public:
     [[nodiscard]] constexpr pointer operator->() const noexcept;
 
 private:
-    template <is_Forward_Iterator Left_Iterator,
-              is_Forward_Iterator Right_Iterator>
-    friend constexpr bool operator==(const Left_Iterator &left,
-                                     const Right_Iterator &right) noexcept;
-
-    template <is_Forward_Iterator Left_Iterator,
-              is_Forward_Iterator Right_Iterator>
-    friend constexpr bool operator!=(const Left_Iterator &left,
-                                     const Right_Iterator &right) noexcept;
+    template <is_Forward_Iterator Iterator>
+    friend std::ostream &operator<<(std::ostream &os, const Iterator &it);
 
     template <is_Forward_Iterator Iterator>
-    friend constexpr typename Iterator::reference
+    friend std::ostream &operator<<(std::ostream &os, const Iterator &&it);
+
+    template <is_Forward_Iterator Left_Iterator,
+              is_Forward_Iterator Right_Iterator>
+    friend constexpr inline bool
+    operator==(const Left_Iterator &left, const Right_Iterator &right) noexcept;
+
+    template <is_Forward_Iterator Left_Iterator,
+              is_Forward_Iterator Right_Iterator>
+    friend constexpr inline bool
+    operator!=(const Left_Iterator &left, const Right_Iterator &right) noexcept;
+
+    template <is_Forward_Iterator Iterator>
+    friend constexpr inline typename Iterator::reference
     operator*(const Iterator &iterator) noexcept;
 
     template <is_Forward_Iterator Iterator>
@@ -260,18 +275,24 @@ public:
     constexpr ~Const_Bidirectional_Iterator() override = default;
 
 private:
-    template <is_Forward_Iterator Left_Iterator,
-              is_Forward_Iterator Right_Iterator>
-    friend constexpr bool operator==(const Left_Iterator &left,
-                                     const Right_Iterator &right) noexcept;
-
-    template <is_Forward_Iterator Left_Iterator,
-              is_Forward_Iterator Right_Iterator>
-    friend constexpr bool operator!=(const Left_Iterator &left,
-                                     const Right_Iterator &right) noexcept;
+    template <is_Forward_Iterator Iterator>
+    friend std::ostream &operator<<(std::ostream &os, const Iterator &it);
 
     template <is_Forward_Iterator Iterator>
-    friend constexpr typename Iterator::reference
+    friend std::ostream &operator<<(std::ostream &os, const Iterator &&it);
+
+    template <is_Forward_Iterator Left_Iterator,
+              is_Forward_Iterator Right_Iterator>
+    friend constexpr inline bool
+    operator==(const Left_Iterator &left, const Right_Iterator &right) noexcept;
+
+    template <is_Forward_Iterator Left_Iterator,
+              is_Forward_Iterator Right_Iterator>
+    friend constexpr inline bool
+    operator!=(const Left_Iterator &left, const Right_Iterator &right) noexcept;
+
+    template <is_Forward_Iterator Iterator>
+    friend constexpr inline typename Iterator::reference
     operator*(const Iterator &iterator) noexcept;
 
     template <is_Forward_Iterator Iterator>
@@ -319,18 +340,24 @@ public:
     [[nodiscard]] constexpr reference operator[](const difference_type n) const;
 
 private:
-    template <is_Forward_Iterator Left_Iterator,
-              is_Forward_Iterator Right_Iterator>
-    friend constexpr bool operator==(const Left_Iterator &left,
-                                     const Right_Iterator &right) noexcept;
-
-    template <is_Forward_Iterator Left_Iterator,
-              is_Forward_Iterator Right_Iterator>
-    friend constexpr bool operator!=(const Left_Iterator &left,
-                                     const Right_Iterator &right) noexcept;
+    template <is_Forward_Iterator Iterator>
+    friend std::ostream &operator<<(std::ostream &os, const Iterator &it);
 
     template <is_Forward_Iterator Iterator>
-    friend constexpr typename Iterator::reference
+    friend std::ostream &operator<<(std::ostream &os, const Iterator &&it);
+
+    template <is_Forward_Iterator Left_Iterator,
+              is_Forward_Iterator Right_Iterator>
+    friend constexpr inline bool
+    operator==(const Left_Iterator &left, const Right_Iterator &right) noexcept;
+
+    template <is_Forward_Iterator Left_Iterator,
+              is_Forward_Iterator Right_Iterator>
+    friend constexpr inline bool
+    operator!=(const Left_Iterator &left, const Right_Iterator &right) noexcept;
+
+    template <is_Forward_Iterator Iterator>
+    friend constexpr inline typename Iterator::reference
     operator*(const Iterator &iterator) noexcept;
 
     template <is_Forward_Iterator Iterator>
@@ -349,23 +376,23 @@ private:
 
     template <is_Random_Iterator Left_Iterator,
               is_Random_Iterator Right_Iterator>
-    friend constexpr bool operator>(const Left_Iterator &left,
-                                    const Right_Iterator &right) noexcept;
+    friend constexpr inline bool
+    operator>(const Left_Iterator &left, const Right_Iterator &right) noexcept;
 
     template <is_Random_Iterator Left_Iterator,
               is_Random_Iterator Right_Iterator>
-    friend constexpr bool operator<(const Left_Iterator &left,
-                                    const Right_Iterator &right) noexcept;
+    friend constexpr inline bool
+    operator<(const Left_Iterator &left, const Right_Iterator &right) noexcept;
 
     template <is_Random_Iterator Left_Iterator,
               is_Random_Iterator Right_Iterator>
-    friend constexpr bool operator>=(const Left_Iterator &left,
-                                     const Right_Iterator &right) noexcept;
+    friend constexpr inline bool
+    operator>=(const Left_Iterator &left, const Right_Iterator &right) noexcept;
 
     template <is_Random_Iterator Left_Iterator,
               is_Random_Iterator Right_Iterator>
-    friend constexpr bool operator<=(const Left_Iterator &left,
-                                     const Right_Iterator &right) noexcept;
+    friend constexpr inline bool
+    operator<=(const Left_Iterator &left, const Right_Iterator &right) noexcept;
 
     template <is_Random_Iterator Iterator>
     friend constexpr typename Iterator::Self
@@ -426,18 +453,24 @@ public:
     [[nodiscard]] constexpr pointer operator->() const noexcept;
 
 private:
-    template <is_Forward_Iterator Left_Iterator,
-              is_Forward_Iterator Right_Iterator>
-    friend constexpr bool operator==(const Left_Iterator &left,
-                                     const Right_Iterator &right) noexcept;
-
-    template <is_Forward_Iterator Left_Iterator,
-              is_Forward_Iterator Right_Iterator>
-    friend constexpr bool operator!=(const Left_Iterator &left,
-                                     const Right_Iterator &right) noexcept;
+    template <is_Forward_Iterator Iterator>
+    friend std::ostream &operator<<(std::ostream &os, const Iterator &it);
 
     template <is_Forward_Iterator Iterator>
-    friend constexpr typename Iterator::reference
+    friend std::ostream &operator<<(std::ostream &os, const Iterator &&it);
+
+    template <is_Forward_Iterator Left_Iterator,
+              is_Forward_Iterator Right_Iterator>
+    friend constexpr inline bool
+    operator==(const Left_Iterator &left, const Right_Iterator &right) noexcept;
+
+    template <is_Forward_Iterator Left_Iterator,
+              is_Forward_Iterator Right_Iterator>
+    friend constexpr inline bool
+    operator!=(const Left_Iterator &left, const Right_Iterator &right) noexcept;
+
+    template <is_Forward_Iterator Iterator>
+    friend constexpr inline typename Iterator::reference
     operator*(const Iterator &iterator) noexcept;
 
     template <is_Forward_Iterator Iterator>
@@ -478,18 +511,24 @@ public:
     [[nodiscard]] constexpr pointer operator->() const noexcept;
 
 private:
-    template <is_Forward_Iterator Left_Iterator,
-              is_Forward_Iterator Right_Iterator>
-    friend constexpr bool operator==(const Left_Iterator &left,
-                                     const Right_Iterator &right) noexcept;
-
-    template <is_Forward_Iterator Left_Iterator,
-              is_Forward_Iterator Right_Iterator>
-    friend constexpr bool operator!=(const Left_Iterator &left,
-                                     const Right_Iterator &right) noexcept;
+    template <is_Forward_Iterator Iterator>
+    friend std::ostream &operator<<(std::ostream &os, const Iterator &it);
 
     template <is_Forward_Iterator Iterator>
-    friend constexpr typename Iterator::reference
+    friend std::ostream &operator<<(std::ostream &os, const Iterator &&it);
+
+    template <is_Forward_Iterator Left_Iterator,
+              is_Forward_Iterator Right_Iterator>
+    friend constexpr inline bool
+    operator==(const Left_Iterator &left, const Right_Iterator &right) noexcept;
+
+    template <is_Forward_Iterator Left_Iterator,
+              is_Forward_Iterator Right_Iterator>
+    friend constexpr inline bool
+    operator!=(const Left_Iterator &left, const Right_Iterator &right) noexcept;
+
+    template <is_Forward_Iterator Iterator>
+    friend constexpr inline typename Iterator::reference
     operator*(const Iterator &iterator) noexcept;
 
     template <is_Forward_Iterator Iterator>
@@ -538,18 +577,24 @@ public:
     [[nodiscard]] constexpr reference operator[](const difference_type n) const;
 
 private:
-    template <is_Forward_Iterator Left_Iterator,
-              is_Forward_Iterator Right_Iterator>
-    friend constexpr bool operator==(const Left_Iterator &left,
-                                     const Right_Iterator &right) noexcept;
-
-    template <is_Forward_Iterator Left_Iterator,
-              is_Forward_Iterator Right_Iterator>
-    friend constexpr bool operator!=(const Left_Iterator &left,
-                                     const Right_Iterator &right) noexcept;
+    template <is_Forward_Iterator Iterator>
+    friend std::ostream &operator<<(std::ostream &os, const Iterator &it);
 
     template <is_Forward_Iterator Iterator>
-    friend constexpr typename Iterator::reference
+    friend std::ostream &operator<<(std::ostream &os, const Iterator &&it);
+
+    template <is_Forward_Iterator Left_Iterator,
+              is_Forward_Iterator Right_Iterator>
+    friend constexpr inline bool
+    operator==(const Left_Iterator &left, const Right_Iterator &right) noexcept;
+
+    template <is_Forward_Iterator Left_Iterator,
+              is_Forward_Iterator Right_Iterator>
+    friend constexpr inline bool
+    operator!=(const Left_Iterator &left, const Right_Iterator &right) noexcept;
+
+    template <is_Forward_Iterator Iterator>
+    friend constexpr inline typename Iterator::reference
     operator*(const Iterator &iterator) noexcept;
 
     template <is_Forward_Iterator Iterator>
@@ -568,23 +613,23 @@ private:
 
     template <is_Random_Iterator Left_Iterator,
               is_Random_Iterator Right_Iterator>
-    friend constexpr bool operator>(const Left_Iterator &left,
-                                    const Right_Iterator &right) noexcept;
+    friend constexpr inline bool
+    operator>(const Left_Iterator &left, const Right_Iterator &right) noexcept;
 
     template <is_Random_Iterator Left_Iterator,
               is_Random_Iterator Right_Iterator>
-    friend constexpr bool operator<(const Left_Iterator &left,
-                                    const Right_Iterator &right) noexcept;
+    friend constexpr inline bool
+    operator<(const Left_Iterator &left, const Right_Iterator &right) noexcept;
 
     template <is_Random_Iterator Left_Iterator,
               is_Random_Iterator Right_Iterator>
-    friend constexpr bool operator>=(const Left_Iterator &left,
-                                     const Right_Iterator &right) noexcept;
+    friend constexpr inline bool
+    operator>=(const Left_Iterator &left, const Right_Iterator &right) noexcept;
 
     template <is_Random_Iterator Left_Iterator,
               is_Random_Iterator Right_Iterator>
-    friend constexpr bool operator<=(const Left_Iterator &left,
-                                     const Right_Iterator &right) noexcept;
+    friend constexpr inline bool
+    operator<=(const Left_Iterator &left, const Right_Iterator &right) noexcept;
 
     template <is_Random_Iterator Iterator>
     friend constexpr typename Iterator::Self
@@ -619,19 +664,19 @@ private:
 // impletment operator
 namespace llframe {
 template <is_Forward_Iterator Left_Iterator, is_Forward_Iterator Right_Iterator>
-[[nodiscard]] constexpr bool operator==(const Left_Iterator &left,
-                                        const Right_Iterator &right) noexcept {
+[[nodiscard]] constexpr inline bool
+operator==(const Left_Iterator &left, const Right_Iterator &right) noexcept {
     return left._pointer == right._pointer;
 }
 
 template <is_Forward_Iterator Left_Iterator, is_Forward_Iterator Right_Iterator>
-constexpr bool operator!=(const Left_Iterator &left,
-                          const Right_Iterator &right) noexcept {
+constexpr inline bool operator!=(const Left_Iterator &left,
+                                 const Right_Iterator &right) noexcept {
     return left._pointer != right._pointer;
 }
 
 template <is_Forward_Iterator Iterator>
-constexpr typename Iterator::reference
+constexpr inline typename Iterator::reference
 operator*(const Iterator &iterator) noexcept {
     return *iterator._pointer;
 };
@@ -665,26 +710,26 @@ constexpr typename Iterator::Self operator--(Iterator &iterator, int) {
 };
 
 template <is_Random_Iterator Left_Iterator, is_Random_Iterator Right_Iterator>
-constexpr bool operator>(const Left_Iterator &left,
-                         const Right_Iterator &right) noexcept {
+constexpr inline bool operator>(const Left_Iterator &left,
+                                const Right_Iterator &right) noexcept {
     return left._pointer > right._pointer;
 };
 
 template <is_Random_Iterator Left_Iterator, is_Random_Iterator Right_Iterator>
-constexpr bool operator<(const Left_Iterator &left,
-                         const Right_Iterator &right) noexcept {
+constexpr inline bool operator<(const Left_Iterator &left,
+                                const Right_Iterator &right) noexcept {
     return left._pointer < right._pointer;
 };
 
 template <is_Random_Iterator Left_Iterator, is_Random_Iterator Right_Iterator>
-constexpr bool operator>=(const Left_Iterator &left,
-                          const Right_Iterator &right) noexcept {
+constexpr inline bool operator>=(const Left_Iterator &left,
+                                 const Right_Iterator &right) noexcept {
     return left._pointer >= right._pointer;
 };
 
 template <is_Random_Iterator Left_Iterator, is_Random_Iterator Right_Iterator>
-constexpr bool operator<=(const Left_Iterator &left,
-                          const Right_Iterator &right) noexcept {
+constexpr inline bool operator<=(const Left_Iterator &left,
+                                 const Right_Iterator &right) noexcept {
     return left._pointer <= right._pointer;
 };
 
@@ -777,5 +822,20 @@ Random_Iterator<Container>::operator[](const difference_type n) const {
     return *(*this + n);
 }
 
+} // namespace llframe
+
+// impletment other
+namespace llframe {
+template <is_Forward_Iterator Iterator>
+std::ostream &operator<<(std::ostream &os, const Iterator &it) {
+    if (it._pointer == nullptr) __LLFRAME_THROW_EXCEPTION__(Null_Pointer);
+    os << *it;
+    return os;
+}
+
+template <is_Forward_Iterator Iterator>
+std::ostream &operator<<(std::ostream &os, const Iterator &&it) {
+    return (os << it);
+}
 } // namespace llframe
 #endif __LLFRAME_ITERATOR_HPP__

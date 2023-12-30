@@ -166,6 +166,9 @@ constexpr std::string Bad_Alloc::what() const noexcept {
     return this->message + this->locations;
 };
 
+} // namespace llframe
+// Out_Range
+namespace llframe {
 class Out_Range : public Exception {
 public:
     using Exception::Exception;
@@ -176,13 +179,25 @@ public:
     // 异常信息
     const std::string message{"out of range!"};
 };
-} // namespace llframe
-// Out_Range
-namespace llframe {
 constexpr std::string Out_Range::what() const noexcept {
     return this->message + this->locations;
 };
 
 } // namespace llframe
+// Null_Pointer
+namespace llframe {
+class Null_Pointer : public Exception {
+public:
+    using Exception::Exception;
 
+    constexpr std::string what() const noexcept override;
+
+public:
+    // 异常信息
+    const std::string message{"null pointer error!"};
+};
+constexpr std::string Null_Pointer::what() const noexcept {
+    return this->message + this->locations;
+}
+} // namespace llframe
 #endif //__LLFRAME_EXCEPTION_HPP__
