@@ -2,9 +2,9 @@
 #ifdef TEST_ITERATOR
 #include <gtest/gtest.h>
 #ifdef __LLFRAME_USE_MODULE__
-import llframe.core.iterator;
+import llframe;
 #else
-#include "core/iterator.hpp"
+#include "llframe.hpp"
 #endif // __LLFRAME_USE_MODULE__
 #include <iterator>
 #include <array>

@@ -3,11 +3,9 @@
 #include <gtest/gtest.h>
 #include <type_traits>
 #ifdef __LLFRAME_USE_MODULE__
-import llframe.size;
-import llframe.core.exception;
+import llframe;
 #else
-#include "tensor/size.hpp"
-#include "core/exception.hpp"
+#include "llframe.hpp"
 #endif // __LLFRAME_USE_MODULE__
 
 TEST(size, make_size) {

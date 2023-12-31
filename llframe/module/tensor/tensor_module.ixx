@@ -13,7 +13,7 @@
 //    limitations under the License.
 
 /**
- * @file tensor.hpp
+ * @file tensor.ixx
  * @brief 张量
  * @details
  * @author 时光丶人爱
@@ -22,14 +22,7 @@
  * better way to implement it,please contact me by email 1152488956@qq.com.
  * @copyright Apache 2.0
  */
-#ifndef __LLFRAME_TENSOR_HPP__
-#define __LLFRAME_TENSOR_HPP__
-#ifdef __LLFRAME_USE_MODULE__
-import llframe.size;
-#else
-#include "tensor/size.hpp"
-#endif // __LLFRAME_USE_MODULE__
-namespace llframe {
-
-} // namespace llframe
-#endif //__LLFRAME_TENSOR_HPP__
+module;
+export module llframe.tensor;
+export import llframe.tensor.size;
+export import llframe.tensor.tensor;

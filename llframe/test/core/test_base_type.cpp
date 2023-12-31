@@ -4,7 +4,7 @@
 #ifdef __LLFRAME_USE_MODULE__
 import llframe;
 #else
-#include "core/base_type.hpp"
+#include "llframe.hpp"
 #endif // __LLFRAME_USE_MODULE__
 TEST(base_type, int8_t) {
     ASSERT_EQ(sizeof(llframe::int8_t), 1);

@@ -2,9 +2,9 @@
 #ifdef TEST_CORE
 #include <gtest/gtest.h>
 #ifdef __LLFRAME_USE_MODULE__
-import llframe.core;
+import llframe;
 #else
-#include "core/core.hpp"
+#include "llframe.hpp"
 #endif // __LLFRAME_USE_MODULE__
 
 #endif // TEST_CORE

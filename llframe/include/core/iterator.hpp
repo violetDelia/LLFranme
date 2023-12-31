@@ -21,6 +21,7 @@
  * @file iterator.hpp
  * @brief 迭代器接口
  * @details
+ * 按照std标准实现的指针迭代器,继承时需要注意同时选择添加相应的友元函数.
  * @author 时光丶人爱
  * @date 2023-12-23
  * @see If you have any questions about the code
@@ -61,21 +62,21 @@ class Const_Random_Iterator;
 template <class _Ty>
 struct _Is_Forward_Iterator : std::false_type {};
 
-template <template <class> typename _Ty, class _Arg>
+template <template <class> class _Ty, class _Arg>
 struct _Is_Forward_Iterator<_Ty<_Arg>>
     : std::is_base_of<Const_Forward_Iterator<_Arg>, _Ty<_Arg>> {};
 
 template <class _Ty>
 struct _Is_Bidirectional_Iterator : std::false_type {};
 
-template <template <class> typename _Ty, class _Arg>
+template <template <class> class _Ty, class _Arg>
 struct _Is_Bidirectional_Iterator<_Ty<_Arg>>
     : std::is_base_of<Const_Bidirectional_Iterator<_Arg>, _Ty<_Arg>> {};
 
 template <class _Ty>
 struct _Is_Random_Iterator : std::false_type {};
 
-template <template <class> typename _Ty, class _Arg>
+template <template <class> class _Ty, class _Arg>
 struct _Is_Random_Iterator<_Ty<_Arg>>
     : std::is_base_of<Const_Random_Iterator<_Arg>, _Ty<_Arg>> {};
 
@@ -187,7 +188,8 @@ namespace llframe {
  * @brief
  * const的向前迭代器,满足std::forward_iterator的要求且不可更改指向的元素.
  *
- * @tparam Container 容器
+ * @tparam Container 容器,其内部需要定义value_type,pointer,reference
+ * 和difference_type
  */
 template <class Container>
 class Const_Forward_Iterator {
@@ -252,7 +254,8 @@ private:
  * @brief
  * const的双向迭代器,满足std::bidirectional_iterator的要求且不可更改指向的元素
  *
- * @tparam Container 容器
+ * @tparam Container 容器,其内部需要定义value_type,pointer,reference
+ * 和difference_type
  */
 template <class Container>
 class Const_Bidirectional_Iterator : public Const_Forward_Iterator<Container> {
@@ -314,7 +317,8 @@ private:
  * @brief
  * const的随机迭代器,满足std::random_access_iterator的要求且不可更改指向的元素
  *
- * @tparam Container 容器
+ * @tparam Container 容器,其内部需要定义value_type,pointer,reference
+ * 和difference_type
  */
 template <class Container>
 class Const_Random_Iterator : public Const_Bidirectional_Iterator<Container> {
@@ -427,7 +431,8 @@ private:
  * @brief
  * 向前迭代器,满足std::forward_iterator的要求.
  *
- * @tparam Container 容器
+ * @tparam Container 容器,其内部需要定义value_type,pointer,reference
+ * 和difference_type
  */
 template <class Container>
 class Forward_Iterator : protected Const_Forward_Iterator<Container> {
@@ -485,7 +490,8 @@ private:
  * @brief
  * 双向迭代器,满足std::bidirectional_iterator的要求
  *
- * @tparam Container 容器
+ * @tparam Container 容器,其内部需要定义value_type,pointer,reference
+ * 和difference_type
  */
 template <class Container>
 class Bidirectional_Iterator : public Const_Bidirectional_Iterator<Container> {
@@ -550,7 +556,8 @@ private:
  * @brief
  * 随机迭代器,满足std::random_access_iterator的要求
  *
- * @tparam Container 容器
+ * @tparam Container ,其内部需要定义value_type,pointer,reference
+ * 和difference_type
  */
 template <class Container>
 class Random_Iterator : public Const_Random_Iterator<Container> {

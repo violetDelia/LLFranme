@@ -2,9 +2,9 @@
 #ifdef TEST_DEVICE
 #include <gtest/gtest.h>
 #ifdef __LLFRAME_USE_MODULE__
-import llframe.memory.device;
+import llframe;
 #else
-#include "memory/device.hpp"
+#include "llframe.hpp"
 
 #endif // __LLFRAME_USE_MODULE__
 #endif // TEST_DEVICE

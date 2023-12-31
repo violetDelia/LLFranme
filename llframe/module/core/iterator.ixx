@@ -38,69 +38,20 @@ using llframe::Const_Random_Iterator;
 using llframe::Forward_Iterator;
 using llframe::Random_Iterator;
 
-template <is_Forward_Iterator Left_Iterator, is_Forward_Iterator Right_Iterator>
-constexpr bool operator==(const Left_Iterator &left,
-                          const Right_Iterator &right) noexcept;
+using llframe::operator!=;
+using llframe::operator==;
+using llframe::operator*;
+using llframe::operator++;
+using llframe::operator--;
+using llframe::operator>;
+using llframe::operator<;
+using llframe::operator>=;
+using llframe::operator<=;
+using llframe::operator+;
+using llframe::operator+=;
+using llframe::operator-;
+using llframe::operator-=;
 
-template <is_Forward_Iterator Left_Iterator, is_Forward_Iterator Right_Iterator>
-constexpr bool operator!=(const Left_Iterator &left,
-                          const Right_Iterator &right) noexcept;
+using llframe::operator<<;
 
-template <is_Forward_Iterator Iterator>
-constexpr typename Iterator::reference
-operator*(const Iterator &iterator) noexcept;
-
-template <is_Forward_Iterator Iterator>
-constexpr typename Iterator::Self &operator++(Iterator &iterator);
-
-template <is_Forward_Iterator Iterator>
-constexpr typename Iterator::Self operator++(Iterator &iterator, int);
-
-template <is_Bidirectional_Iterator Iterator>
-constexpr typename Iterator::Self &operator--(Iterator &iterator);
-
-template <is_Bidirectional_Iterator Iterator>
-constexpr typename Iterator::Self operator--(Iterator &iterator, int);
-
-template <is_Random_Iterator Left_Iterator, is_Random_Iterator Right_Iterator>
-constexpr bool operator>(const Left_Iterator &left,
-                         const Right_Iterator &right) noexcept;
-
-template <is_Random_Iterator Left_Iterator, is_Random_Iterator Right_Iterator>
-constexpr bool operator<(const Left_Iterator &left,
-                         const Right_Iterator &right) noexcept;
-
-template <is_Random_Iterator Left_Iterator, is_Random_Iterator Right_Iterator>
-constexpr bool operator>=(const Left_Iterator &left,
-                          const Right_Iterator &right) noexcept;
-
-template <is_Random_Iterator Left_Iterator, is_Random_Iterator Right_Iterator>
-constexpr bool operator<=(const Left_Iterator &left,
-                          const Right_Iterator &right) noexcept;
-
-template <is_Random_Iterator Iterator>
-constexpr typename Iterator::Self
-operator+(const Iterator &iterator, const typename Iterator::difference_type n);
-
-template <is_Random_Iterator Iterator>
-constexpr typename Iterator::Self
-operator-(const Iterator &iterator, const typename Iterator::difference_type n);
-
-template <is_Random_Iterator Iterator>
-constexpr typename Iterator::Self &
-operator+=(Iterator &iterator, const typename Iterator::difference_type n);
-
-template <is_Random_Iterator Iterator>
-constexpr typename Iterator::Self &
-operator-=(Iterator &iterator, const typename Iterator::difference_type n);
-
-template <is_Random_Iterator Left_Iterator, is_Random_Iterator Right_Iterator>
-constexpr typename Left_Iterator::difference_type
-operator-(const Left_Iterator &left, const Right_Iterator &right) noexcept;
-
-template <is_Forward_Iterator Iterator>
-std::ostream &operator<<(std::ostream &os, const Iterator &it);
-
-template <is_Forward_Iterator Iterator>
-std::ostream &operator<<(std::ostream &os, const Iterator &&it);
 } // namespace llframe

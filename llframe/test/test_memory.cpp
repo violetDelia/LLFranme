@@ -2,8 +2,8 @@
 #ifdef TEST_MEMORY
 #include <gtest/gtest.h>
 #ifdef __LLFRAME_USE_MODULE__
-import llframe.memory;
+import llframe;
 #else
-#include "memory/memory.hpp"
+#include "llframe.hpp"
 #endif // __LLFRAME_USE_MODULE__
 #endif // TEST_MEMORY

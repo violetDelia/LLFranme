@@ -23,5 +23,9 @@
  * @copyright Apache 2.0
  */
 module;
-export module llframe.tensor;
-export import llframe.size;
+#include "tensor/tensor.hpp"
+export module llframe.tensor.tensor;
+export namespace llframe {
+using llframe::Tensor;
+using llframe::_Tensor_Base;
+} // namespace llframe
