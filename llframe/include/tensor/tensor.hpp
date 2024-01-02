@@ -70,7 +70,7 @@ public:
 
 public:
     // protected:
-    constexpr size_type capacity() const;
+    constexpr virtual size_type capacity() const;
 };
 
 template <size_t Dims, class Ty = float32_t, device::is_Device Device = HOST>

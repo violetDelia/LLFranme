@@ -33,7 +33,8 @@ import llframe.core.base_type;
 #include "core/base_type.hpp"
 #endif // __LLFRAME_USE_MODULE__
 #include <memory>
-// _Allocator_Base
+#include <execution>
+// define _Allocator_Base
 namespace llframe {
 /**
  * @brief 分配器,确保能够编译时分配内存,内存池后面再说
@@ -49,9 +50,10 @@ private:
 
 public:
     using value_type = Ty;
-    using pointer = Ty *;
-    using const_pointer = const typename std::remove_const<Ty> *;
-    using reference = Ty &;
+    using pointer = Ty  *;
+    using const_pointer = const Ty *;
+    using reference = Ty  &;
+    using const_reference = const Ty  &;
     using size_type = size_t;
     using difference_type = ptrdiff_t;
 
@@ -72,7 +74,7 @@ public:
      * @param n 数量
      * @return
      */
-    constexpr static void deallocate(value_type *p, size_type n);
+    constexpr static inline void deallocate(value_type *p, size_type n);
 
 protected:
     /**
@@ -84,6 +86,9 @@ protected:
     template <size_type _Ty_Size>
     static constexpr size_type _get_size(const size_type n);
 };
+} // namespace llframe
+// impletment _Allocator_Base
+namespace llframe {
 
 template <class Ty>
 constexpr _Allocator_Base<Ty>::pointer
@@ -116,8 +121,9 @@ _Allocator_Base<Ty>::_get_size(const size_type n) {
     }
     return n * _Ty_Size;
 };
+
 }; // namespace llframe
-// Allocator
+// define Allocator
 namespace llframe {
 template <class Ty, device::is_Device Device = HOST>
 class Allocator : public _Allocator_Base<Ty> {
@@ -129,13 +135,14 @@ public:
     using pointer = Base::pointer;
     using const_pointer = Base::const_pointer;
     using reference = Base::reference;
+    using const_reference = Base::const_reference;
     using device_type = Device;
     using size_type = Base::size_type;
     using difference_type = Base::difference_type;
 };
 
 }; // namespace llframe
-// Allocator<Ty, HOST>
+// define Allocator<Ty, HOST>
 namespace llframe {
 template <class Ty>
 class Allocator<Ty, HOST> : public _Allocator_Base<Ty> {
@@ -147,54 +154,329 @@ public:
     using pointer = Base::pointer;
     using const_pointer = Base::const_pointer;
     using reference = Base::reference;
+    using const_reference = Base::const_reference;
     using device_type = HOST;
     using size_type = Base::size_type;
     using difference_type = Base::difference_type;
+
+public:
+    template <std::forward_iterator It>
+    static void defaut_construct(It first, It last);
+
+    template <std::forward_iterator It, class ExecutionPolicy>
+    static void defaut_construct(ExecutionPolicy &&policy, It first, It last);
+
+    template <std::forward_iterator It>
+    static void defaut_construct(It first, size_type n);
+
+    template <std::forward_iterator It, class ExecutionPolicy>
+    static void defaut_construct(ExecutionPolicy &&policy, It first,
+                                 size_type n);
+
+    template <std::forward_iterator It>
+    static void construct(It first, It last);
+
+    template <std::forward_iterator It, class ExecutionPolicy>
+    static void construct(ExecutionPolicy &&policy, It first, It last);
+
+    template <std::forward_iterator It>
+    static void construct(It first, size_t n);
+
+    template <std::forward_iterator It, class ExecutionPolicy>
+    static void construct(ExecutionPolicy &&policy, It first, size_type n);
+
+    template <std::forward_iterator It, std::forward_iterator Target_It>
+    static void move(It first, It last, Target_It target_first);
+
+    template <std::forward_iterator It, std::forward_iterator Target_It,
+              class ExecutionPolicy>
+    static void move(ExecutionPolicy &&policy, It first, It last,
+                     Target_It target_first);
+
+    template <std::forward_iterator It, std::forward_iterator Target_It>
+    static void move(It first, size_type n, Target_It target_first);
+
+    template <std::forward_iterator It, std::forward_iterator Target_It,
+              class ExecutionPolicy>
+    static void move(ExecutionPolicy &&policy, It first, size_type n,
+                     Target_It target_first);
+
+    template <std::forward_iterator It>
+    static void fill(It first, It last, const_reference value);
+
+    template <class ExecutionPolicy, std::forward_iterator It>
+    static void fill(ExecutionPolicy &&policy, It first, It last,
+                     const_reference value);
+
+    template <std::forward_iterator It>
+    static void fill(It first, size_type n, const_reference value);
+
+    template <class ExecutionPolicy, std::forward_iterator It>
+    static void fill(ExecutionPolicy &&policy, It first, size_type n,
+                     const_reference value);
+
+    template <std::forward_iterator It, std::forward_iterator Target_It>
+    static void copy(It first, It last, Target_It target_first);
+
+    template <std::forward_iterator It, std::forward_iterator Target_It,
+              class ExecutionPolicy>
+    static void copy(ExecutionPolicy &&policy, It first, It last,
+                     Target_It target_first);
+
+    template <std::forward_iterator It, std::forward_iterator Target_It>
+    static void copy(It first, size_type n, Target_It target_first);
+
+    template <std::forward_iterator It, std::forward_iterator Target_It,
+              class ExecutionPolicy>
+    static void copy(ExecutionPolicy &&policy, It first, size_type n,
+                     Target_It target_first);
+
+    template <std::forward_iterator It>
+    void static destroy(It first, It last);
+
+    template <class ExecutionPolicy, std::forward_iterator It>
+    void static destroy(ExecutionPolicy &&policy, It first, It last);
+
+    template <std::forward_iterator It>
+    void static destroy(It first, size_type n);
+
+    template <class ExecutionPolicy, std::forward_iterator It>
+    static void destroy(ExecutionPolicy &&policy, It first, size_type last);
+
+    static void destroy_at(pointer p);
+
+    template <class... Args>
+    static pointer construct_at(pointer p, Args &&...args);
 };
 
 }; // namespace llframe
-// Allocator<Ty, CPU>
+
+// impletment Allocator<Ty,HOST>
 namespace llframe {
 template <class Ty>
-class Allocator<Ty, CPU> : public Allocator<Ty, HOST> {
-private:
-    using Base = Allocator<Ty, HOST>;
-
-public:
-    using value_type = Base::value_type;
-    using pointer = Base::pointer;
-    using const_pointer = Base::const_pointer;
-    using reference = Base::reference;
-    using device_type = CPU;
-    using size_type = Base::size_type;
-    using difference_type = Base::difference_type;
-
-public:
-    [[nodiscard]] static constexpr pointer allocate(size_type n);
-    constexpr static void deallocate(value_type *p, size_type n);
+template <std::forward_iterator It>
+void Allocator<Ty, HOST>::defaut_construct(It first, It last) {
+    std::uninitialized_default_construct(first, last);
 };
 
-} // namespace llframe
-// Allocator<Ty, GPU>
-namespace llframe {
 template <class Ty>
-class Allocator<Ty, GPU> : public Allocator<Ty, HOST> {
-private:
-    using Base = Allocator<Ty, HOST>;
-
-public:
-    using value_type = Base::value_type;
-    using pointer = Base::pointer;
-    using const_pointer = Base::const_pointer;
-    using reference = Base::reference;
-    using device_type = GPU;
-    using size_type = Base::size_type;
-    using difference_type = Base::difference_type;
-
-public:
-    [[nodiscard]] static constexpr pointer allocate(size_type n);
-    constexpr static void deallocate(value_type *p, size_type n);
+template <std::forward_iterator It, class ExecutionPolicy>
+void Allocator<Ty, HOST>::defaut_construct(ExecutionPolicy &&policy, It first,
+                                           It last) {
+    std::uninitialized_default_construct(
+        std::forward<ExecutionPolicy &&>(policy), first, last);
 };
 
-} // namespace llframe
+template <class Ty>
+template <std::forward_iterator It>
+void Allocator<Ty, HOST>::defaut_construct(It first, size_type n) {
+    std::uninitialized_default_construct_n(first, n);
+};
+
+template <class Ty>
+template <std::forward_iterator It, class ExecutionPolicy>
+void Allocator<Ty, HOST>::defaut_construct(ExecutionPolicy &&policy, It first,
+                                           size_type n) {
+    std::uninitialized_default_construct_n(
+        std::forward<ExecutionPolicy &&>(policy), first, n);
+};
+
+template <class Ty>
+template <std::forward_iterator It>
+void Allocator<Ty, HOST>::construct(It first, It last) {
+    std::uninitialized_value_construct(first, last);
+};
+
+template <class Ty>
+template <std::forward_iterator It, class ExecutionPolicy>
+void Allocator<Ty, HOST>::construct(ExecutionPolicy &&policy, It first,
+                                    It last) {
+    std::uninitialized_value_construct(std::forward<ExecutionPolicy &&>(policy),
+                                       first, last);
+};
+
+template <class Ty>
+template <std::forward_iterator It>
+void Allocator<Ty, HOST>::construct(It first, size_type n) {
+    std::uninitialized_value_construct_n(first, n);
+};
+
+template <class Ty>
+template <std::forward_iterator It, class ExecutionPolicy>
+void Allocator<Ty, HOST>::construct(ExecutionPolicy &&policy, It first,
+                                    size_type n) {
+    std::uninitialized_value_construct_n(
+        std::forward<ExecutionPolicy &&>(policy), first, n);
+};
+
+template <class Ty>
+template <std::forward_iterator It, std::forward_iterator Target_It>
+void Allocator<Ty, HOST>::move(It first, It last, Target_It target_first) {
+    std::uninitialized_move(first, last, target_first);
+};
+
+template <class Ty>
+template <std::forward_iterator It, std::forward_iterator Target_It,
+          class ExecutionPolicy>
+void Allocator<Ty, HOST>::move(ExecutionPolicy &&policy, It first, It last,
+                               Target_It target_first) {
+    std::uninitialized_move(std::forward<ExecutionPolicy &&>(policy), first,
+                            last, target_first);
+};
+
+template <class Ty>
+template <std::forward_iterator It, std::forward_iterator Target_It>
+void Allocator<Ty, HOST>::move(It first, size_type n, Target_It target_first) {
+    std::uninitialized_move_n(first, n, target_first);
+};
+
+template <class Ty>
+template <std::forward_iterator It, std::forward_iterator Target_It,
+          class ExecutionPolicy>
+void Allocator<Ty, HOST>::move(ExecutionPolicy &&policy, It first, size_type n,
+                               Target_It target_first) {
+    std::uninitialized_move_n(std::forward<ExecutionPolicy &&>(policy), first,
+                              n, target_first);
+};
+
+template <class Ty>
+template <std::forward_iterator It>
+void Allocator<Ty, HOST>::fill(It first, It last, const_reference value) {
+    std::uninitialized_fill(first, last, value);
+}
+
+template <class Ty>
+template <class ExecutionPolicy, std::forward_iterator It>
+void Allocator<Ty, HOST>::fill(ExecutionPolicy &&policy, It first, It last,
+                               const_reference value) {
+    std::uninitialized_fill(std::forward<ExecutionPolicy &&>(policy), first,
+                            last, value);
+}
+
+template <class Ty>
+template <std::forward_iterator It>
+void Allocator<Ty, HOST>::fill(It first, size_type n, const_reference value) {
+    std::uninitialized_fill_n(first, n, value);
+}
+
+template <class Ty>
+template <class ExecutionPolicy, std::forward_iterator It>
+void Allocator<Ty, HOST>::fill(ExecutionPolicy &&policy, It first, size_type n,
+                               const_reference value) {
+    std::uninitialized_fill_n(std::forward<ExecutionPolicy &&>(policy), first,
+                              n, value);
+}
+
+template <class Ty>
+template <std::forward_iterator It, std::forward_iterator Target_It>
+void Allocator<Ty, HOST>::copy(It first, It last, Target_It target_first) {
+    std::uninitialized_copy(first, last, target_first);
+};
+
+template <class Ty>
+template <std::forward_iterator It, std::forward_iterator Target_It,
+          class ExecutionPolicy>
+void Allocator<Ty, HOST>::copy(ExecutionPolicy &&policy, It first, It last,
+                               Target_It target_first) {
+    std::uninitialized_copy(std::forward<ExecutionPolicy &&>(policy), first,
+                            last, target_first);
+};
+
+template <class Ty>
+template <std::forward_iterator It, std::forward_iterator Target_It>
+void Allocator<Ty, HOST>::copy(It first, size_type n, Target_It target_first) {
+    std::uninitialized_copy_n(first, n, target_first);
+};
+
+template <class Ty>
+template <std::forward_iterator It, std::forward_iterator Target_It,
+          class ExecutionPolicy>
+void Allocator<Ty, HOST>::copy(ExecutionPolicy &&policy, It first, size_type n,
+                               Target_It target_first) {
+    std::uninitialized_copy_n(std::forward<ExecutionPolicy &&>(policy), first,
+                              n, target_first);
+};
+
+template <class Ty>
+template <std::forward_iterator It>
+void Allocator<Ty, HOST>::destroy(It first, It last) {
+    std::destroy(first, last);
+}
+
+template <class Ty>
+template <class ExecutionPolicy, std::forward_iterator It>
+void Allocator<Ty, HOST>::destroy(ExecutionPolicy &&policy, It first, It last) {
+    std::destroy(std::forward<ExecutionPolicy &&>(policy), first, last);
+}
+
+template <class Ty>
+template <std::forward_iterator It>
+void Allocator<Ty, HOST>::destroy(It first, size_type n) {
+    std::destroy_n(first, n);
+}
+
+template <class Ty>
+template <class ExecutionPolicy, std::forward_iterator It>
+void Allocator<Ty, HOST>::destroy(ExecutionPolicy &&policy, It first,
+                                  size_type n) {
+    std::destroy_n(std::forward<ExecutionPolicy &&>(policy), first, n);
+}
+
+template <class Ty>
+void Allocator<Ty, HOST>::destroy_at(pointer p) {
+    std::destroy_at(p);
+}
+
+template <class Ty>
+template <class... Args>
+Allocator<Ty, HOST>::pointer Allocator<Ty, HOST>::construct_at(pointer p,
+                                                               Args &&...args) {
+    return std::construct_at(p, std::forward<Args>(args)...);
+}
+}; // namespace llframe
+// namespace llframe
+// // Allocator<Ty, CPU>
+// namespace llframe {
+// template <class Ty>
+// class Allocator<Ty, CPU> : public Allocator<Ty, HOST> {
+// private:
+//     using Base = Allocator<Ty, HOST>;
+
+// public:
+//     using value_type = Base::value_type;
+//     using pointer = Base::pointer;
+//     using const_pointer = Base::const_pointer;
+//     using reference = Base::reference;
+//     using device_type = CPU;
+//     using size_type = Base::size_type;
+//     using difference_type = Base::difference_type;
+
+// public:
+//     [[nodiscard]] static constexpr pointer allocate(size_type n);
+//     constexpr static void deallocate(value_type *p, size_type n);
+// };
+
+// } // namespace llframe
+// // Allocator<Ty, GPU>
+// namespace llframe {
+// template <class Ty>
+// class Allocator<Ty, GPU> : public Allocator<Ty, HOST> {
+// private:
+//     using Base = Allocator<Ty, HOST>;
+
+// public:
+//     using value_type = Base::value_type;
+//     using pointer = Base::pointer;
+//     using const_pointer = Base::const_pointer;
+//     using reference = Base::reference;
+//     using device_type = GPU;
+//     using size_type = Base::size_type;
+//     using difference_type = Base::difference_type;
+
+// public:
+//     [[nodiscard]] static constexpr pointer allocate(size_type n);
+//     constexpr static void deallocate(value_type *p, size_type n);
+// };
+
+// } // namespace llframe
 #endif //__LLFRAME_CONFIG_HPP__

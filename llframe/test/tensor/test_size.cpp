@@ -23,8 +23,8 @@ TEST(size, make_size) {
     ASSERT_EQ(d.begin().operator->() == nullptr, false);
 };
 TEST(size, construct) {
-    int dim_1 = 0;
-    long long dim_2 = 1;
+    size_t dim_1 = 0;
+    size_t dim_2 = 1;
     int place_holder{};
     llframe::Size<2> a(dim_1, dim_2);
     ASSERT_EQ(a.at(0), 0);
@@ -35,7 +35,7 @@ TEST(size, construct) {
     ASSERT_EQ(b.at(1), 1);
     ASSERT_THROW(place_holder = b.at(2), llframe::Out_Range);
     auto c(std::move(b));
-    ASSERT_EQ(b.begin().operator->() == nullptr, true);
+    ASSERT_EQ(b.begin().operator->() == nullptr,false);
     ASSERT_EQ(c.at(0), 0);
     ASSERT_EQ(c.at(1), 1);
     ASSERT_THROW(place_holder = c.at(2), llframe::Out_Range);
@@ -44,7 +44,7 @@ TEST(size, construct) {
     ASSERT_EQ(d.at(1), 1);
     ASSERT_THROW(place_holder = d.at(2), llframe::Out_Range);
     auto e = std::move(d);
-    ASSERT_EQ(d.begin().operator->() == nullptr, true);
+    ASSERT_EQ(d.begin().operator->() == nullptr, false);
     ASSERT_EQ(e.at(0), 0);
     ASSERT_EQ(e.at(1), 1);
     ASSERT_THROW(place_holder = c.at(2), llframe::Out_Range);
@@ -105,20 +105,20 @@ TEST(size, at) {
 TEST(size, operator_array_subscript) {
     int place_holder{};
     auto a = llframe::make_size();
-    ASSERT_THROW(place_holder = a[0], llframe::Null_Pointer);
+    ASSERT_THROW(place_holder = a[0], llframe::Out_Range);
     auto b = llframe::make_size(0, 1);
     ASSERT_EQ(b[0], 0);
     ASSERT_EQ(b[1], 1);
-    ASSERT_NO_THROW(place_holder = b[2]);
+    ASSERT_THROW(place_holder = b[2],llframe::Out_Range);
     auto c = std::move(b);
-    ASSERT_THROW(place_holder = b[0], llframe::Null_Pointer);
+    ASSERT_NO_THROW(place_holder = b[0]);
     ASSERT_EQ(c[0], 0);
     ASSERT_EQ(c[1], 1);
-    ASSERT_NO_THROW(place_holder = c[2]);
+    ASSERT_THROW(place_holder = c[2],llframe::Out_Range);
     auto d = c;
     ASSERT_EQ(d[0], c[0]);
     ASSERT_EQ(d[1], c[1]);
-    ASSERT_NO_THROW(place_holder = d[2]);
+    ASSERT_THROW(place_holder = d[2],llframe::Out_Range);
     ASSERT_EQ(d[0], 0);
     d[0] = 2;
     ASSERT_EQ(d[0], 2);

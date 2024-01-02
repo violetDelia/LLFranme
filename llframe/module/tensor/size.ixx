@@ -24,6 +24,7 @@
  */
 module;
 #include "tensor/size.hpp"
+
 export module llframe.tensor.size;
 export namespace llframe {
 using llframe::Array;
@@ -34,9 +35,4 @@ using llframe::operator<<;
 using llframe::operator==;
 using llframe::operator!=;
 
-// template <is_Size Size>
-// std::ostream &operator<<(std::ostream &os, const Size &size);
-
-// template <is_Size Size>
-// std::ostream &operator<<(std::ostream &os, const Size &&size);
 } // namespace llframe

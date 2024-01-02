@@ -27,9 +27,8 @@
 #define __LLFRAME_SIZE_HPP__
 #include <initializer_list>
 #include <type_traits>
-#include <algorithm>
-#include <memory>
 #include <iostream>
+#include <iterator>
 #include "core/exception_helper.hpp"
 #ifdef __LLFRAME_USE_MODULE__
 import llframe.core.base_type;
@@ -43,11 +42,10 @@ import llframe.core.iterator;
 #include "core/helper.hpp"
 #endif // __LLFRAME_USE_MODULE__
 
-// define Array and Size
+// define Array
 namespace llframe {
 /**
- * @brief 数组,move移动后或者无参数初始化,此时访问元素将返回空指针错误.
- * ps: 未测试,暂时不用,只需要Size测试合格.
+ * @brief 数组 
  * @tparam Dims 维度
  */
 template <class Ty, size_t Dims>
@@ -83,12 +81,12 @@ public:
     constexpr Array() noexcept;
     constexpr Array(const Self &other) noexcept;
     constexpr Array(Self &&other) noexcept;
+    constexpr Array(std::initializer_list<Ty> list) noexcept;
+    template <std::input_iterator It>
+    constexpr Array(It first, It last) noexcept;
     constexpr Array &operator=(const Self &other) noexcept;
     constexpr Array &operator=(Self &&other) noexcept;
     constexpr virtual ~Array() noexcept;
-    constexpr Array(std::initializer_list<Ty> &list) noexcept;
-    template <std::input_iterator Iterator>
-    constexpr Array(Iterator &begin, Iterator &end) noexcept;
 
 public:
     constexpr virtual iterator begin() noexcept;
@@ -126,19 +124,33 @@ public:
      */
     [[nodiscard]] constexpr virtual value_type at(size_type index) const;
 
-    /**
-     * @brief 是否为空
-     *
-     *
-     * @return
-     */
-    [[nodiscard]] constexpr virtual inline bool empty() const;
+protected:
+    [[nodiscard]] constexpr virtual bool _empty() const;
 
 private:
     template <size_t Dims, class Ty, is_Device Device>
     friend class _Tensor_Base;
 };
 
+template <class Ty, class Other_Ty, size_t Dims, size_t Other_Dims>
+[[nodiscard]] consteval bool operator==(Array<Ty, Dims> &left,
+                                        Array<Other_Ty, Other_Dims> &right);
+
+template <class Ty, class Other_Ty, size_t Dims, size_t Other_Dims>
+[[nodiscard]] consteval bool operator!=(Array<Ty, Dims> &left,
+                                        Array<Other_Ty, Other_Dims> &right);
+
+template <class Ty, size_t Dims>
+[[nodiscard]] constexpr bool operator==(Array<Ty, Dims> &left,
+                                        Array<Ty, Dims> &right);
+
+template <class Ty, size_t Dims>
+[[nodiscard]] constexpr bool operator!=(Array<Ty, Dims> &left,
+                                        Array<Ty, Dims> &right);
+} // namespace llframe
+
+// define Size
+namespace llframe {
 /**
  * @brief 形状
  * 如果内存为空,用at访问会返回0,而不是空指针错误.
@@ -169,63 +181,20 @@ protected:
 
 private:
     using Base::size;
-
-public:
     using Base::Array;
 
+public:
     template <is_Integral... Integrals>
     constexpr Size(Integrals... values) noexcept;
+    constexpr Size() noexcept = default;
+    constexpr Size(const Self &other) noexcept  = default;
+    constexpr Size(Self &&other) noexcept;
+    constexpr Size &operator=(const Self &other) noexcept = default;
+    constexpr Size &operator=(Self &&other) noexcept;
 
-    constexpr value_type at(size_type index) const override;
-
+public:
     [[nodiscard]] consteval size_type dims() const noexcept;
 };
-
-// define operator
-
-} // namespace llframe
-
-// define operator
-namespace llframe {
-template <class Ty, class Other_Ty, size_t Dims, size_t Other_Dims>
-[[nodiscard]] consteval bool operator==(Array<Ty, Dims> &left,
-                                        Array<Other_Ty, Other_Dims> &right);
-
-template <class Ty, class Other_Ty, size_t Dims, size_t Other_Dims>
-[[nodiscard]] consteval bool operator!=(Array<Ty, Dims> &left,
-                                        Array<Other_Ty, Other_Dims> &right);
-
-template <class Ty, size_t Dims>
-[[nodiscard]] constexpr bool operator==(Array<Ty, Dims> &left,
-                                        Array<Ty, Dims> &right);
-
-template <class Ty, size_t Dims>
-[[nodiscard]] constexpr bool operator!=(Array<Ty, Dims> &left,
-                                        Array<Ty, Dims> &right);
-} // namespace llframe
-
-// define make_size
-namespace llframe {
-
-/**
- * @brief 构造size
- *
- * @tparam Integrals 整数
- * @param value 尺寸
- * @return Size<is_Integral... Integrals>
- */
-template <is_Integral... Integrals>
-[[nodiscard]] inline constexpr Size<sizeof...(Integrals)>
-make_size(Integrals... value) noexcept;
-
-template <size_t Dims>
-[[nodiscard]] inline constexpr Size<Dims>
-make_size(const Size<Dims> &size) noexcept;
-
-} // namespace llframe
-
-// define other
-namespace llframe {
 
 template <class _Ty>
 struct _Is_Size : std::false_type {};
@@ -241,36 +210,70 @@ std::ostream &operator<<(std::ostream &os, const Size &size);
 
 template <is_Size Size>
 std::ostream &operator<<(std::ostream &os, const Size &&size);
+
+/**
+ * @brief 构造size
+ *
+ * @tparam Integrals 整数
+ * @param value 尺寸
+ * @return Size<is_Integral... Integrals>
+ */
+template <is_Integral... Integrals>
+[[nodiscard]] inline constexpr Size<sizeof...(Integrals)>
+make_size(Integrals... value) noexcept;
+
+template <size_t Dims>
+[[nodiscard]] inline constexpr Size<Dims>
+make_size(const Size<Dims> &size) noexcept;
 } // namespace llframe
 
-// impletment Size
+// impletment Array
 namespace llframe {
 template <class Ty, size_t Dims>
-constexpr Array<Ty, Dims>::Array() noexcept : _begin{}, _end{} {};
+constexpr Array<Ty, Dims>::Array() noexcept :
+    _begin(allocator::allocate(Self::Dims)), _end(_begin + Self::Dims) {
+    allocator::construct(begin(), end());
+};
 
 template <class Ty, size_t Dims>
 constexpr Array<Ty, Dims>::Array(const Self &other) noexcept :
     _begin(allocator::allocate(Self::Dims)), _end(_begin + Self::Dims) {
-    std::ranges::copy(other.begin(), other.end(), begin());
+    allocator::copy(other.begin(), other.end(), begin());
 };
 
 template <class Ty, size_t Dims>
 constexpr Array<Ty, Dims>::Array(Self &&other) noexcept :
-    _begin(other._begin), _end(other._end) {
-    other._begin = nullptr;
-    other._end = nullptr;
+    _begin(allocator::allocate(Self::Dims)), _end(_begin + Self::Dims) {
+    allocator::move(other.begin(), other.end(), begin());
+};
+template <class Ty, size_t Dims>
+constexpr Array<Ty, Dims>::Array(std::initializer_list<Ty> list) noexcept {
+    Array(list.begin(), list.end());
+};
+
+template <class Ty, size_t Dims>
+template <std::input_iterator It>
+constexpr Array<Ty, Dims>::Array(It first, It last) noexcept {
+    size_type init_len = std::distance(first, last);
+    if (init_len >= Dims)
+        allocator::move(begin(), end(), first);
+    else {
+        allocator::move(begin(), init_len, first);
+        allocator::construct(begin() + init_len, end());
+    }
 };
 
 template <class Ty, size_t Dims>
 constexpr Array<Ty, Dims>::Self &
 Array<Ty, Dims>::operator=(const Self &other) noexcept {
     if (this != std::addressof(other)) {
-        if (empty()) {
+        if (_empty()) {
             _begin = allocator::allocate(Self::Dims);
             _end = _begin + Self::Dims;
         }
-        std::ranges::copy(other.begin(), other.end(), begin());
+        allocator::copy(other.begin(), other.end(), begin());
     }
+
     return *this;
 };
 
@@ -278,24 +281,26 @@ template <class Ty, size_t Dims>
 constexpr Array<Ty, Dims>::Self &
 Array<Ty, Dims>::operator=(Self &&other) noexcept {
     if (this != std::addressof(other)) {
-        _begin(other._begin);
-        _end(other._end);
-        other._begin = nullptr;
-        other._end = nullptr;
+        if (_empty()) {
+            _begin = allocator::allocate(Self::Dims);
+            _end = _begin + Self::Dims;
+        }
+        allocator::move(other.begin(), other.end(), begin());
     }
     return *this;
 };
 
 template <class Ty, size_t Dims>
 constexpr Array<Ty, Dims>::~Array() noexcept {
-    if (empty()) return;
-    allocator::deallocate(_begin, Dims + 1);
+    if (_empty()) return;
+    allocator::destroy(begin(), Dims);
+    allocator::deallocate(_begin, Dims);
     _begin = nullptr;
     _end = nullptr;
 };
 
 template <class Ty, size_t Dims>
-constexpr bool Array<Ty, Dims>::empty() const {
+constexpr bool Array<Ty, Dims>::_empty() const {
     return (_begin == nullptr) && (_end == nullptr);
 };
 
@@ -309,45 +314,17 @@ constexpr Array<Ty, Dims>::value_type
 Array<Ty, Dims>::at(size_type index) const {
     if (static_cast<size_type>(index) >= Dims)
         __LLFRAME_THROW_EXCEPTION__(Out_Range);
-    if (empty()) __LLFRAME_THROW_EXCEPTION__(Null_Pointer);
     return *(begin() + index);
 }
 
 template <class Ty, size_t Dims>
 constexpr Array<Ty, Dims>::reference
 Array<Ty, Dims>::operator[](size_type index) {
-    if (empty()) __LLFRAME_THROW_EXCEPTION__(Null_Pointer);
+    if (static_cast<size_type>(index) >= Dims)
+        __LLFRAME_THROW_EXCEPTION__(Out_Range);
     return begin()[index];
 }
 
-template <size_t Dims>
-template <is_Integral... Integrals>
-constexpr Size<Dims>::Size(Integrals... values) noexcept {
-    this->_begin = allocator::allocate(Self::Dims);
-    this->_end = this->_begin + Self::Dims;
-    static_assert(sizeof...(values) == Dims);
-    auto index = this->begin();
-    --index;
-    ((*(++index) = values), ...);
-}
-
-template <size_t Dims>
-constexpr Size<Dims>::value_type Size<Dims>::at(size_type index) const {
-    if (static_cast<size_type>(index) >= Dims)
-        __LLFRAME_THROW_EXCEPTION__(Out_Range);
-    if (this->empty()) return 0;
-    return *(this->begin() + index);
-}
-
-template <size_t Dims>
-consteval Size<Dims>::size_type Size<Dims>::dims() const noexcept {
-    return this->Dims;
-};
-
-} // namespace llframe
-
-// impletment operator
-namespace llframe {
 template <class Ty, class Other_Ty, size_t Dims, size_t Other_Dims>
 consteval bool operator==(Array<Ty, Dims> &left,
                           Array<Other_Ty, Other_Dims> &right) {
@@ -372,24 +349,10 @@ template <class Ty, size_t Dims>
 constexpr bool operator!=(Array<Ty, Dims> &left, Array<Ty, Dims> &right) {
     return !(left == right);
 };
+
 } // namespace llframe
 
-// impletment make_size
-namespace llframe {
-
-template <is_Integral... Integrals>
-inline constexpr Size<sizeof...(Integrals)>
-make_size(Integrals... values) noexcept {
-    return Size<sizeof...(Integrals)>(values...);
-};
-
-template <size_t Dims>
-inline constexpr Size<Dims> make_size(const Size<Dims> &size) noexcept {
-    return Size<Dims>(size);
-}
-} // namespace llframe
-
-// impletment Size iterator
+// impletment Array iterator
 namespace llframe {
 template <class Ty, size_t Dims>
 constexpr Array<Ty, Dims>::iterator Array<Ty, Dims>::begin() noexcept {
@@ -460,17 +423,59 @@ Array<Ty, Dims>::crend() const noexcept {
 };
 } // namespace llframe
 
-// impletement other
+// impletment Size
 namespace llframe {
+
+template <size_t Dims>
+template <is_Integral... Integrals>
+constexpr Size<Dims>::Size(Integrals... values) noexcept {
+    this->_begin = allocator::allocate(Self::Dims);
+    this->_end = this->_begin + Self::Dims;
+    static_assert(sizeof...(values) == Dims);
+    auto index = this->begin();
+    --index;
+    ((*(++index) = values), ...);
+}
+
+template <size_t Dims>
+constexpr Size<Dims>::Size(Self &&other) noexcept :
+    Base::Array(std::move(other)) {
+    value_type zore{};
+    allocator::fill(other.begin(), other.end(), zore);
+}
+
+template <size_t Dims>
+constexpr Size<Dims> &Size<Dims>::operator=(Self &&other) noexcept {
+    Base::Array(std::move(other));
+    value_type zore{};
+    allocator::fill(other.begin(), other.end(), zore);
+    return *this;
+}
+
+template <size_t Dims>
+consteval Size<Dims>::size_type Size<Dims>::dims() const noexcept {
+    return this->Dims;
+};
+
+template <is_Integral... Integrals>
+inline constexpr Size<sizeof...(Integrals)>
+make_size(Integrals... values) noexcept {
+    return Size<sizeof...(Integrals)>(values...);
+};
+
+template <size_t Dims>
+inline constexpr Size<Dims> make_size(const Size<Dims> &size) noexcept {
+    return Size<Dims>(size);
+}
 template <is_Size Size>
 std::ostream &operator<<(std::ostream &os, const Size &size) {
     auto it = size.cbegin();
     const auto end = size.cend();
-    os << "size:[";
+    std::puts("size:[");
     int i{};
     for (; i < Size::Dims - 1; i++) { os << size.at(i) << ","; }
     if (i < Size::Dims) os << size.at(i);
-    os << "]";
+    std::putchar("]");
     return os;
 };
 
